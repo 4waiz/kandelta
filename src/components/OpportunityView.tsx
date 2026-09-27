@@ -4,16 +4,18 @@ import { useMemo, useState } from "react";
 import { useJson } from "@/lib/useJson";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { AlertTriangle, ArrowLeft, Eye, MessageSquareText, RotateCw, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ChevronDown, Eye, Info, MessageSquareText, ShieldCheck } from "lucide-react";
 import type { OpportunityDetail } from "@/lib/whitespace/opportunity";
 import type { LabContext } from "@/lib/whitespace/audience";
 import { fmtCompact, fmtInt, fmtPct, fmtX } from "@/lib/format";
 import { useVault } from "@/lib/vault";
-import { Button, Chip, SectionTitle, Skeleton, StageBadge, Stat, cn } from "./ui";
+import { Chip, SectionTitle, Skeleton, StageBadge, Stat, cn } from "./ui";
+import { SearchError } from "./SearchError";
 import { MethodButton } from "./MethodModal";
 import { SourceBadge } from "./SourceBadge";
 import { VideoCard } from "./VideoCard";
 import { CrowdGapCard } from "./CrowdGapCard";
+import { BrandMark } from "./BrandMark";
 import { AudienceLab } from "./AudienceLab";
 import { Activate } from "./Activate";
 import { BrandLandscape } from "./BrandLandscape";
@@ -90,20 +92,12 @@ export function OpportunityView() {
   }, [data]);
 
   if (error)
-    return (
-      <div className="mt-12 flex flex-col items-start gap-3 rounded-xl border border-line bg-panel p-6">
-        <div className="flex items-center gap-2 text-sm font-medium">
-          <AlertTriangle size={16} className="text-warn" /> {error}
-        </div>
-        <Button variant="outline" onClick={retry}>
-          <RotateCw size={14} /> Try again
-        </Button>
-      </div>
-    );
+    return <SearchError error={error} onRetry={retry} />;
 
   if (!data || !labCtx)
     return (
       <div className="pt-10">
+        <BrandMark className="mb-5 h-7 w-7 animate-pulse" />
         <Skeleton className="h-8 w-64" />
         <Skeleton className="mt-3 h-5 w-96" />
         <div className="mt-8 grid gap-3 sm:grid-cols-4">
@@ -123,7 +117,8 @@ export function OpportunityView() {
   const organic = data.evidence.filter((v) => !v.sponsored && !v.likelyBoosted);
   const paid = data.evidence.filter((v) => v.sponsored || v.likelyBoosted);
   const visualGap = data.crowdGaps.find((g) => g.id === "visual");
-  const otherGaps = data.crowdGaps.filter((g) => g.id !== "visual" && g.isGap);
+  const supportingGaps = ["tags", "audio", "collab"].map((key) => data.crowdGaps.find((g) => g.id === key)).filter((g): g is (typeof data.crowdGaps)[number] => !!g);
+  const additionalGaps = data.crowdGaps.filter((g) => !["visual", "tags", "audio", "collab"].includes(g.id));
   const topWatched = data.evidence.slice().sort((a, b) => b.views - a.views).slice(0, 3);
   const topWatchedPaid = topWatched.filter((v) => v.sponsored || v.likelyBoosted);
   const from = { query: data.query, opportunity: data.brief.title };
@@ -191,7 +186,7 @@ export function OpportunityView() {
             <p className="mt-3 flex items-start gap-2 text-sm text-muted">
               <Eye size={15} className="mt-0.5 shrink-0 text-accent" />
               <span>
-                A separate text search found {fmtInt(data.captionOverlap.n)} posts mentioning {data.captionOverlap.phrases.join(", ").replace(/, ([^,]*)$/, " or $1")}. This is not an intersection count with the {fmtInt(o.stats.n)} visual matches and does not prove the posts tested a product.
+                Of the posts matching this visual, {data.captionOverlap.n < o.stats.n ? "only " : ""}{fmtInt(data.captionOverlap.n)} also mention {data.captionOverlap.phrases.join(", ").replace(/, ([^,]*)$/, " or $1")} in caption or speech.
               </span>
             </p>
           ) : null}
@@ -220,7 +215,7 @@ export function OpportunityView() {
 
       {/* ---------- SECTION NAV ---------- */}
       <nav className="sticky top-14 z-20 -mx-4 mt-8 border-y border-line-soft bg-bg/85 px-4 backdrop-blur sm:-mx-6 sm:px-6">
-        <div className="flex gap-1 overflow-x-auto py-2 scrollbar-thin">
+          <div className="flex flex-wrap gap-1 py-2 sm:flex-nowrap sm:overflow-x-auto sm:scrollbar-thin">
           {SECTIONS.map(([sid, label]) => (
             <a key={sid} href={`#${sid}`} className="shrink-0 rounded-md px-2.5 py-1 text-xs text-muted transition-colors hover:bg-panel-2 hover:text-fg">
               {label}
@@ -237,9 +232,9 @@ export function OpportunityView() {
           </span>
         </SectionTitle>
         <p className="mt-3 text-xs text-muted">Oriane&apos;s {fmtInt(o.stats.n)} matched posts and response metrics are population statistics, unchanged by this second-stage example review. {data.review.criteria} None of these examples alone proves running-shoe performance or UAE market fit.</p>
-        {data.review.excluded.length > 0 && <details className="mt-3 rounded-lg border border-line bg-panel p-3 text-xs text-muted" data-testid="review-exclusions"><summary className="cursor-pointer">{data.review.excluded.length} sampled posts excluded — see reasons</summary><ul className="mt-2 space-y-2">{data.review.excluded.map(v => <li key={v.id}>@{v.handle} · {v.visualMatch !== null ? `frame score ${v.visualMatch.toFixed(2)} · ` : ""}{v.reason}</li>)}</ul></details>}
+         {data.review.excluded.length > 0 && <details className="mt-3 rounded-lg border border-line bg-panel p-3 text-xs text-muted" data-testid="review-exclusions"><summary className="cursor-pointer">{data.review.excluded.length} sampled posts excluded: see reasons</summary><ul className="mt-2 space-y-2">{data.review.excluded.map(v => <li key={v.id}>@{v.handle} · {v.visualMatch !== null ? `frame score ${v.visualMatch.toFixed(2)} · ` : ""}{v.reason}</li>)}</ul></details>}
         {!data.evidence.length && <p className="mt-4 text-sm text-muted">No qualified example videos in the sampled result pages. Do not use this angle as a product or local-market proof without further review.</p>}
-        <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {organic.slice(0, 8).map((v) => (
             <VideoCard key={v.id} v={v} marketReach={data.market.reach} marketEr={data.market.er} why={whyVideo(v)} saved={isSaved(v.id)} onSave={() => save(data.brief.title, v, from)} />
           ))}
@@ -250,7 +245,7 @@ export function OpportunityView() {
               {showAds ? "Hide" : "Show"} {paid.length} brand ads / boosted posts with this look →
             </button>
             {showAds ? (
-              <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {paid.map((v) => (
                   <VideoCard key={v.id} v={v} marketReach={data.market.reach} marketEr={data.market.er} why={whyVideo(v)} saved={isSaved(v.id)} onSave={() => save(data.brief.title, v, from)} />
                 ))}
@@ -262,28 +257,48 @@ export function OpportunityView() {
 
       {/* ---------- CROWD GAP ---------- */}
       <section className="mt-14">
-        <SectionTitle id="crowd-gap" eyebrow="Crowd gap" title="What most creators do vs what audiences reward" />
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {visualGap ? <CrowdGapCard gap={visualGap} /> : null}
-          {otherGaps.slice(0, 1).map((g) => (
-            <CrowdGapCard key={g.id} gap={g} />
-          ))}
-          {!otherGaps.length ? (
-            <div className="rounded-xl border border-line bg-panel p-5 text-sm text-muted">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">Other dimensions checked</div>
-              <ul className="mt-2 space-y-1.5">
-                {data.crowdGaps
-                  .filter((g) => g.id !== "visual")
-                  .map((g) => (
-                    <li key={g.id}>
-                      <span className="text-fg">{g.dimension}:</span> {g.headline}
-                    </li>
-                  ))}
-              </ul>
-              <p className="mt-3 text-xs text-faint">KanDelta only reports a gap when the data shows one.</p>
+        <div id="crowd-gap" className="scroll-mt-24">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">Supply / response study</div>
+              <h2 className="mt-2 text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">CROWD GAP</h2>
+              <p className="mt-1 text-sm text-muted">What everyone makes vs what audiences reward</p>
             </div>
-          ) : null}
+            <span className="text-[11px] text-faint">Measured choices, not predictions</span>
+          </div>
         </div>
+        {data.crowdGaps.length ? (
+          <>
+            <div className="mt-5">
+              {visualGap ? <CrowdGapCard gap={visualGap} featured /> : (
+                <div className="rounded-xl border border-line bg-panel px-5 py-6 text-sm text-muted">
+                  Visual style comparison is unavailable for this market. The measured metadata dimensions are shown below.
+                </div>
+              )}
+            </div>
+            {supportingGaps.length ? (
+              <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {supportingGaps.map((g) => <CrowdGapCard key={g.id} gap={g} />)}
+              </div>
+            ) : null}
+            <details className="group mt-4 rounded-lg border border-line-soft bg-panel/50 text-xs text-muted">
+              <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 font-medium text-muted marker:hidden hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden">
+                <Info size={14} aria-hidden="true" />
+                Method
+                <ChevronDown size={14} aria-hidden="true" className="ml-auto transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="grid gap-x-8 gap-y-4 border-t border-line-soft px-4 py-4 leading-relaxed sm:grid-cols-2">
+                <div><span className="block font-medium text-fg">Universe & window</span>{data.scope}. {data.note ? <span className="block mt-1">{data.note}</span> : null}</div>
+                <div><span className="block font-medium text-fg">Calculation</span>Supply share = videos in a choice / videos across measured choices. Response = √(views per follower index × engagement per view index) vs the market. Gap lift = highest-response choice / most-common choice; a gap is reported only when the winner differs and the ratio is at least 1.25.</div>
+                <div><span className="block font-medium text-fg">Samples & modality</span>{data.crowdGaps.map((g) => `${g.dimension}: ${fmtInt(g.groups.filter((group) => group.stats.n >= 30 && group.response > 0).reduce((total, group) => total + group.stats.n, 0))} videos (${g.basis})`).join("; ")}.</div>
+                <div><span className="block font-medium text-fg">Source coverage</span>{Object.entries(data.sources).map(([source, count]) => `${source}: ${fmtInt(count)}`).join(" · ") || "Source counts unavailable"}. Comparisons are observational, not causal.</div>
+                {additionalGaps.length ? <div className="sm:col-span-2"><span className="block font-medium text-fg">Other measured dimensions</span>{additionalGaps.map((g) => `${g.dimension}: ${g.isGap ? "gap detected" : "no gap"}`).join(" · ")}.</div> : null}
+              </div>
+            </details>
+          </>
+        ) : (
+          <div className="mt-5 rounded-xl border border-line bg-panel px-5 py-8 text-sm text-muted">No comparable creator choices met the measurement threshold in this market.</div>
+        )}
         <div id="hidden-conversation" className="mt-4 scroll-mt-24">
           <BrandLandscape q={q} id={id} universe={data.market.universe} opportunityName={o.name} />
         </div>

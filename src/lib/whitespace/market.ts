@@ -68,9 +68,10 @@ export function recentWindow(days = 30, end = windowEnd()) {
 
 export function parseMarket(input: string): MarketSpec {
   const query = input.trim().replace(/\s+/g, " ").slice(0, 120);
-  // Keep the real presentation response keys stable on future calendar days.
+  // Keep the verified example response keys stable on future calendar days.
   // Explicit overrides still allow a different evidence window when needed.
-  const end = !process.env.WHITESPACE_WINDOW_END && query.toLowerCase() === "running shoes uae"
+  const verifiedExamples = ["running shoes uae", "uae skincare", "dubai restaurants"];
+  const end = !process.env.WHITESPACE_WINDOW_END && verifiedExamples.includes(query.toLowerCase())
     ? new Date("2026-09-27T00:00:00Z")
     : windowEnd();
   let rest = query.toLowerCase();

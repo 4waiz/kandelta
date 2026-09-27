@@ -219,7 +219,9 @@ function buildGap(id: string, dimension: string, basis: string, groups: GapGroup
       : `${times(winner.stats.reach / consensus.stats.reach)} the views per follower`;
   const headline = isGap
     ? `${pct(consensus.share)} of ${noun} are ${consensus.label.toLowerCase()}. ${winner.label} is ${pct(winner.share)} of them, yet earns ${lead}.`
-    : `${consensus.label} is both the most common and the best-responding choice. No gap here.`;
+    : winner === consensus
+      ? `${consensus.label} is both the most common and the best-responding choice. No meaningful gap here.`
+      : `${consensus.label} is most common. ${winner.label} responds better, but not enough to meet the 1.25× gap threshold.`;
   const describe = (g: GapGroup) =>
     `${g.label}: ${g.stats.n.toLocaleString("en-US")} videos · ${g.stats.reach.toFixed(2)} views/follower · ${(g.stats.er * 100).toFixed(1)}% engagement/view`;
   return { id, dimension, basis, groups, consensus, winner, ratio, headline, detail: isGap ? `${describe(winner)}. ${describe(consensus)}.` : usable.map(describe).join(". ") + ".", isGap };

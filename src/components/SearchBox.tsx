@@ -5,7 +5,8 @@ import { useState } from "react";
 import { ArrowRight, Search } from "lucide-react";
 import { DEMO_QUERY } from "./Presenter";
 
-const EXAMPLES = [DEMO_QUERY, "UAE skincare", "Dubai restaurants", "Specialty coffee", "Luxury travel"];
+// Only show markets backed by verified, genuine Oriane snapshots in the shipped app.
+const EXAMPLES = [DEMO_QUERY, "UAE skincare", "Dubai restaurants"];
 
 export function SearchBox({ size = "lg" }: { size?: "lg" | "sm" }) {
   const router = useRouter();

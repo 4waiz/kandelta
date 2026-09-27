@@ -80,7 +80,7 @@ export function VideoCard({
           </div>
           <div>
             <div className="text-faint">Engagement</div>
-            <div className={cn("tabular font-medium", (erX ?? 0) >= 1.5 && "text-accent")}>{v.er !== null ? fmtPct(v.er, 1) : "—"}</div>
+            <div className={cn("tabular font-medium", (erX ?? 0) >= 1.5 && "text-accent")}>{v.er !== null ? fmtPct(v.er, 1) : "N/A"}</div>
           </div>
         </div>
         {why ? <p className="text-[11px] leading-snug text-muted">{why}</p> : null}

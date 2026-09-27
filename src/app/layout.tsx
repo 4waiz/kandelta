@@ -7,9 +7,10 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "KanDelta — Opportunity intelligence for the video internet",
+  title: "KanDelta | Opportunity intelligence for the video internet",
   description:
     "Find the delta before the market does. KanDelta finds where audience attention and creator supply diverge, using Oriane's video intelligence.",
+  icons: { icon: [{ url: "/icon.svg", type: "image/svg+xml", sizes: "any" }], shortcut: "/icon.svg", apple: "/icon.svg" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

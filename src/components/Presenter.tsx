@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { BrandMark } from "./BrandMark";
 
 export const DEMO_QUERY = "Running shoes UAE";
 export const DEMO_OPPORTUNITY = "visual-outdoor-sun";
@@ -20,15 +21,15 @@ export interface Step {
 
 export const STEPS: Step[] = [
   { title: "Everyone sees the trend", say: "Everyone can see what's trending. KanDelta finds where the market hasn't caught up yet. A running brand launching in the UAE asks: what should we make?", href: `/?q=${q}`, target: "search" },
-  { title: "Delta Map", say: "Oriane watched every running video from the last 3 months. Each bubble is a creative angle. Left = few creators make it. Up = audiences respond more than average. Everyone is over here. This is the delta.", href: `/discover?q=${q}`, target: "map" },
+  { title: "Delta Map", say: "Across 48,197 running videos Oriane indexed in the last three months, the map compares creative angles. Left means few creators make it. Up means audiences respond more than average. The upper-left is the delta.", href: `/discover?q=${q}`, target: "map" },
   { title: "Open the delta", say: "Top-left is the opportunity delta. The strongest signal wasn't found in captions: Oriane's vision found it in the frames.", href: `/discover?q=${q}`, target: "top-opportunities" },
-  { title: "Desert heat", say: "Across 48,197 running videos Oriane indexed, only 119 (0.25%) show people under hot desert sun. Those videos earn 2.1× the engagement per view. Only 12 of them even mention heat: captions would miss it.", href: opp, target: "overview" },
-  { title: "Real evidence", say: "Real videos from Oriane, ranked by visual match. The 3 most-watched with this look are brand ads or boosted posts: brands pay for this look, organic supply stays small.", href: opp, target: "evidence" },
-  { title: "Crowd Gap", say: "49% of style-matched running videos are first-person POV. Desert heat is 9% and earns 2× the engagement per view.", href: opp, target: "crowd-gap" },
-  { title: "Hidden conversation", say: "Are brands already there? Six major running brands collect 2,068 mentions, only 33 in desert-heat videos. And Nike is discussed in 115 running videos that never tag or caption it.", href: opp, target: "hidden-conversation" },
-  { title: "Creative DNA", say: "What the winners have in common, measured from transcripts and audio: talk in the first second, creator's own voice, a real challenge.", href: opp, target: "dna" },
+  { title: "Desert heat", say: "Across 48,197 running videos Oriane indexed, only 119 (0.25%) match the desert-heat visual. Those videos earn 2.1× the engagement per view. Of the visual matches, only 12 also mention heat, hot weather or humidity.", href: opp, target: "overview" },
+  { title: "Real evidence", say: "Real videos from Oriane, ranked by visual match. Two of the three most-watched qualified examples are ads or boosted brand posts. This sample does not measure organic supply across the full market.", href: opp, target: "evidence" },
+  { title: "Crowd Gap", say: "Compare what creators make with what audiences reward. The visual style and supporting dimensions use the measured market response, not a preset example.", href: opp, target: "crowd-gap" },
+  { title: "Hidden conversation", say: "Six major running brands collect 2,068 mentions, only 33 in desert-heat videos. No single brand owns this space. Nike is discussed in 115 running videos that never tag or caption it.", href: opp, target: "hidden-conversation" },
+  { title: "Creative DNA", say: "In the 12 qualified organic evidence videos, all start speech within one second and 10 use original audio. These are measured traits of the sample, not a rule for every creator.", href: opp, target: "dna" },
   { title: "Test with Audience", say: "We found the opportunity with real video evidence. Now an AI-simulated audience panel acts only as a creative pre-flight check. Directional, not consumer research.", href: opp, target: "audience-lab", action: "run-audience" },
-  { title: "One improvement", say: "The simulated panel converges on one fix: state the challenge in the first 2 seconds, which matches the evidence (every example talks within 1s). Apply it and re-test.", href: opp, target: "audience-lab-recs" },
+  { title: "One improvement", say: "The simulated panel suggests stating the challenge in the first two seconds. This is a directional creative test, not a finding that the source videos used a challenge. Apply it and re-test.", href: opp, target: "audience-lab-recs" },
   { title: "Creators who can make it", say: "Ranked by proven execution against their own median, not follower count.", href: opp, target: "creators" },
   { title: "Build the campaign", say: "A brief a creator can shoot tomorrow, built from the evidence.", href: opp, target: "activate", action: "open-brief" },
   { title: "TikTok · Reels · Shorts", say: "One opportunity, adapted per platform. Oriane understands the video internet. KanDelta identifies the opportunity hidden inside it.", href: opp, target: "activate-platforms" },
@@ -142,6 +143,7 @@ function PresenterBar() {
   return (
     <div className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
       <div className="fade-in flex w-full max-w-3xl items-center gap-4 rounded-xl border border-line bg-panel/95 px-4 py-3 shadow-2xl shadow-black/60 backdrop-blur">
+        <BrandMark className="hidden h-6 w-6 shrink-0 sm:block" />
         <div className="shrink-0 text-xs tabular text-faint">
           {step + 1}/{STEPS.length}
         </div>

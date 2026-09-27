@@ -22,7 +22,7 @@ export function BrandLandscape({ q, id, universe, opportunityName }: { q: string
       <div className="rounded-xl border border-line bg-panel p-5">
         <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">Who&apos;s already there</div>
         <p className="mt-2 text-[15px] font-medium leading-snug">
-          The {data.brands.length} biggest {universe} brands collect {fmtInt(totalMentions)} mentions across {universe} videos, but only {fmtInt(data.brandedInOpportunity)} of those mentions are in {opportunityName.toLowerCase()} videos. No brand owns this space yet.
+          The {data.brands.length} biggest {universe} brands collect {fmtInt(totalMentions)} mentions across {universe} videos, but only {fmtInt(data.brandedInOpportunity)} of those mentions are in {opportunityName.toLowerCase()} videos. No single brand owns this space.
         </p>
         <div className="mt-4 grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_70px_90px] gap-x-3 pb-1.5 text-[10px] uppercase tracking-wider text-faint">
           <span>Brand</span>
@@ -66,7 +66,7 @@ export function BrandLandscape({ q, id, universe, opportunityName }: { q: string
               <div className="min-w-0">
                 <p className="text-sm text-fg">“{h.quote}”</p>
                 <p className="mt-0.5 text-[11px] text-faint">
-                  @{h.handle} · at {h.at !== null ? `${Math.floor(h.at)}s` : "—"} · {fmtCompact(h.views)} views{" "}
+                  @{h.handle} · {h.at !== null ? `at ${Math.floor(h.at)}s` : "time unavailable"} · {fmtCompact(h.views)} views{" "}
                   {h.url ? (
                     <a href={h.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-muted hover:text-fg">
                       source <ExternalLink size={10} />

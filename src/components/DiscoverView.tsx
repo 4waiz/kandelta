@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AlertTriangle, Eye, Info, MessageSquareText, RotateCw } from "lucide-react";
+import { Eye, Info, MessageSquareText } from "lucide-react";
 import type { MarketAnalysis, Opportunity } from "@/lib/whitespace/analyze";
 import { fmtCompact, fmtInt, fmtPct, fmtX } from "@/lib/format";
 import { WhiteSpaceMap } from "./WhiteSpaceMap";
-import { CrowdGapCard } from "./CrowdGapCard";
+import { CrowdGapMapCard } from "./CrowdGapCard";
+import { BrandMark } from "./BrandMark";
+import { SearchError } from "./SearchError";
 import { MethodButton } from "./MethodModal";
 import { SearchBox } from "./SearchBox";
-import { Button, Chip, Skeleton, StageBadge } from "./ui";
+import { Chip, Skeleton, StageBadge } from "./ui";
 import { SourceBadge } from "./SourceBadge";
 import { DEMO_OPPORTUNITY, usePresenter } from "./Presenter";
 import { useJson } from "@/lib/useJson";
@@ -56,19 +58,11 @@ export function DiscoverView() {
       </div>
 
       {error ? (
-        <div className="mt-10 flex flex-col items-start gap-3 rounded-xl border border-line bg-panel p-6">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <AlertTriangle size={16} className="text-warn" /> {error}
-          </div>
-          <p className="text-sm text-muted">No cached result exists for this search yet. KanDelta never substitutes made-up data.</p>
-          <Button variant="outline" onClick={retry}>
-            <RotateCw size={14} /> Try again
-          </Button>
-        </div>
+        <SearchError error={error} onRetry={retry} />
       ) : !data ? (
         <div className="mt-8">
           <div className="flex items-center gap-3 text-sm text-muted">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
+            <BrandMark className="h-7 w-7 animate-pulse" />
             {LOADING[tick % LOADING.length]}
           </div>
           <div className="mt-6 grid gap-4 lg:grid-cols-3">
@@ -143,7 +137,7 @@ export function DiscoverView() {
             <h2 className="mt-1 text-xl font-semibold tracking-tight">What everyone makes vs what audiences reward</h2>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {data.crowdGaps.slice(0, 4).map((g) => (
-                <CrowdGapCard key={g.id} gap={g} />
+                <CrowdGapMapCard key={g.id} gap={g} />
               ))}
             </div>
           </div>

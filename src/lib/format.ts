@@ -18,13 +18,13 @@ function trimZeros(s: string) {
 }
 
 export function fmtX(x: number) {
-  if (!Number.isFinite(x) || x <= 0) return "—";
+  if (!Number.isFinite(x) || x <= 0) return "N/A";
   return trimZeros(x >= 10 ? x.toFixed(0) : x >= 3 ? x.toFixed(1) : x.toFixed(2)) + "×";
 }
 
 /** Views per follower: 63 · 4.4 · 0.25 · 0.04 */
 export function fmtRatio(x: number | null) {
-  if (x === null || !Number.isFinite(x)) return "—";
+  if (x === null || !Number.isFinite(x)) return "N/A";
   return x >= 10 ? x.toFixed(0) : x >= 1 ? x.toFixed(1) : x.toFixed(2);
 }
 

@@ -3,18 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Presentation } from "lucide-react";
+import { BrandMark } from "./BrandMark";
 import { cn } from "./ui";
 import { usePresenter } from "./Presenter";
 
 export function Logo({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-2", className)}>
-      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden>
-        <rect x="1" y="1" width="18" height="18" rx="4" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.55" />
-        <path d="M10 5.2 15 14.6H5Z" fill="none" stroke="var(--accent)" strokeWidth="1.6" strokeLinejoin="round" />
-      </svg>
-      <span className="text-[15px] font-semibold tracking-tight">KanDelta</span>
-      <span className="hidden text-[11px] text-faint md:inline">by Team Kanban</span>
+    <span className={cn("inline-flex items-center gap-2.5", className)}>
+      <BrandMark className="h-7 w-7 shrink-0" />
+      <span className="text-[15px] font-semibold tracking-[-0.035em]">KanDelta</span>
+      <span className="hidden border-l border-line pl-2.5 text-[11px] font-normal tracking-normal text-faint md:inline">by Team Kanban</span>
     </span>
   );
 }

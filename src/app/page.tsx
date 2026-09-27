@@ -33,7 +33,7 @@ export default function Home() {
           <span className="text-muted">before the market does.</span>
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-          KanDelta analyzes the video internet to uncover places where audience response and creator supply diverge — before
+          KanDelta analyzes the video internet to uncover places where audience response and creator supply diverge before
           the opportunity becomes crowded.
         </p>
       </div>
