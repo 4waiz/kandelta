@@ -1,0 +1,283 @@
+IMPORTANT CHANGE OF PLAN.
+
+STOP building a separate WhiteSpace implementation.
+
+The Claude implementation is now complete, tested, and is the version we want to ship.
+
+The canonical product branch is:
+
+origin/claude-track
+
+Latest tested Claude build:
+d6954f9d44cf335299361c911b29de001a255a56
+
+It has already passed:
+- production build
+- lint
+- typecheck
+- clean-browser presentation test
+- no console errors
+- no server errors
+- no client-side Oriane API calls
+- real cached Oriane evidence
+- full 12-step Presentation Mode
+
+Your role is now:
+
+REPLIT DEPLOYMENT + INTEGRATION ONLY.
+
+DO NOT redesign the dashboard.
+DO NOT rebuild the scoring engine.
+DO NOT replace Claude's components.
+DO NOT create another version of WhiteSpace.
+
+========================================================
+STEP 1 — CHECKPOINT CURRENT REPLIT WORK
+========================================================
+
+First inspect:
+
+git status
+git branch --show-current
+git log --oneline -5
+
+We should currently be on:
+
+replit-track
+
+If there are uncommitted Replit changes, create a backup checkpoint commit first:
+
+git add -A
+git commit -m "chore: checkpoint Replit port before Claude sync"
+
+Then push the backup branch if possible:
+
+git push -u origin replit-track
+
+This is only a safety backup.
+
+========================================================
+STEP 2 — FETCH CLAUDE VERSION
+========================================================
+
+Run:
+
+git fetch origin
+
+Confirm this branch exists:
+
+origin/claude-track
+
+Do NOT touch main.
+
+========================================================
+STEP 3 — MAKE CLAUDE'S PRODUCT THE REPLIT PRODUCT
+========================================================
+
+Integrate origin/claude-track into replit-track.
+
+Preferred:
+
+git merge origin/claude-track --no-ff
+
+If conflicts happen:
+
+PREFER CLAUDE-TRACK for the actual WhiteSpace application:
+
+- src/app/*
+- src/components/*
+- src/lib/oriane/*
+- src/lib/whitespace/*
+- src/lib/format.ts
+- src/lib/useJson.ts
+- src/lib/vault.ts
+- data/oriane-cache/*
+- data/oriane-assets.json
+- README.md
+- docs/ORIANE_API_NOTES.md
+- scripts/verify-demo.mjs
+- package.json
+- package-lock.json
+
+KEEP REPLIT-SPECIFIC WORK only where it is actually required for deployment:
+
+- a working `.replit`
+- Replit runtime configuration
+- port binding
+- deployment configuration
+
+If the current Replit implementation lives inside artifacts/whitespace or other migration folders and duplicates Claude's root Next.js application, do NOT maintain two apps.
+
+Use Claude's root application as the canonical application.
+
+Do not delete backup work until the merged application is confirmed working.
+
+========================================================
+STEP 4 — ENVIRONMENT
+========================================================
+
+These are already configured in Replit:
+
+ORIANE_API_KEY
+SESSION_SECRET
+
+Do not expose or print either value.
+
+SESSION_SECRET is currently unused and can remain.
+
+I am also adding these Replit Configurations:
+
+WHITESPACE_WINDOW_END=2026-09-27
+WHITESPACE_CACHE_TTL_HOURS=168
+
+Use them.
+
+The cached real Oriane responses are intentionally part of the demo so we do not burn credits or depend on a cold live query.
+
+========================================================
+STEP 5 — REPLIT START COMMAND
+========================================================
+
+Make sure Replit runs the production app correctly.
+
+The production server must bind to:
+
+0.0.0.0
+
+and use:
+
+$PORT
+
+Use the existing Claude `.replit` if it works.
+
+The desired production behavior is equivalent to:
+
+next start -H 0.0.0.0 -p $PORT
+
+Do not replace the application with a separate API server unless absolutely required.
+
+========================================================
+STEP 6 — INSTALL + VERIFY
+========================================================
+
+Run:
+
+npm install
+npm run lint
+npm run build
+
+If a typecheck script exists, run it too.
+
+Then start the app using the Replit runtime.
+
+Test:
+
+/
+ /discover?q=Running%20shoes%20UAE
+ /opportunity?q=Running%20shoes%20UAE&id=visual-outdoor-sun
+ /vault
+
+Also test the relevant /api routes.
+
+========================================================
+STEP 7 — PRESENTATION MODE
+========================================================
+
+Do NOT invent another demo.
+
+Claude already created and tested Presentation Mode.
+
+The tested demo is:
+
+Running shoes UAE
+
+Strongest real finding:
+
+- observed market: 48,197 running videos
+- 119 show people running under hot desert sun
+- that is 0.25% of observed supply
+- those videos show 2.1x engagement per view versus broader running content after the implemented trimming
+- only 12 of the 119 mention heat/hot weather/humidity in caption or speech
+- therefore text-only search misses roughly 90% of this visually detected set
+- six major running brands have 2,068 observed mentions, but only 33 appear in desert-heat content
+- Nike is spoken about in 115 running videos without being captioned/tagged
+
+These are observed relationships from Oriane data, NOT causal claims.
+
+Preserve Claude's wording and methodology.
+
+Audience Lab MUST remain visibly labeled:
+
+AI-simulated audience panel
+Directional feedback, not real consumer research.
+
+========================================================
+STEP 8 — CLEAN REPLIT TEST
+========================================================
+
+Open the actual Replit preview in a clean session.
+
+Run the complete Presentation Mode.
+
+Verify:
+
+- WhiteSpace landing page loads
+- map works
+- Desert Heat opportunity opens
+- evidence videos load
+- Crowd Gap loads
+- Brand Landscape / Hidden Conversation loads
+- Creative DNA loads
+- Audience Lab runs
+- Apply button works
+- Creator Fit loads
+- Build Campaign works
+- TikTok / Reels / Shorts tabs work
+- no console errors
+- no 500 errors
+- no direct browser call to connect.oriane.xyz
+- no secret appears in frontend source/network traffic
+
+Do not modify the product unless something is actually broken.
+
+========================================================
+STEP 9 — PUBLISH
+========================================================
+
+Once the merged Claude build passes inside Replit:
+
+PUBLISH IT.
+
+Use Replit's deployment/publish flow.
+
+Then test the public deployed URL from a fresh browser session.
+
+Do not report success until the public URL actually loads and the Presentation Mode works.
+
+========================================================
+STEP 10 — PUSH REPLIT BRANCH
+========================================================
+
+Once deployment is proven:
+
+commit only the Replit-specific fixes needed to make Claude's build deploy.
+
+Push:
+
+replit-track
+
+DO NOT merge into main.
+
+At the end report only:
+
+1. deployed public URL
+2. branch
+3. latest commit
+4. build result
+5. presentation mode result
+6. any Replit-specific files changed
+7. any remaining issue
+
+Do this now.
+
+Do not return another implementation plan.
