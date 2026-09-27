@@ -13,10 +13,14 @@ expertMode = true
 
 [postMerge]
 path = "scripts/post-merge.sh"
-timeoutMs = 20000
+timeoutMs = 120000
 
 [userenv]
 
 [userenv.shared]
 WHITESPACE_WINDOW_END = "2026-09-27"
 WHITESPACE_CACHE_TTL_HOURS = "168"
+
+[[ports]]
+localPort = 21265
+externalPort = 80
