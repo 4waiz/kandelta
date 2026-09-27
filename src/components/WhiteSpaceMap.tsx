@@ -10,7 +10,7 @@ const M = { l: 58, r: 20, t: 20, b: 48 };
 const SPLIT_SHARE = 0.01;
 
 const QUAD_LABEL: Record<Opportunity["quadrant"], string> = {
-  "white-space": "White space",
+  "white-space": "Opportunity delta",
   "saturated-winner": "Saturated winner",
   noise: "Content noise",
   "low-signal": "Low signal",
@@ -95,7 +95,7 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
 
   return (
     <div className="relative">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full select-none" role="img" aria-label="WhiteSpace map: content supply versus audience response for each creative angle">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full select-none" role="img" aria-label="Delta Map: content supply versus audience response for each creative angle">
         {/* white-space region */}
         <rect x={M.l} y={sy(yMax)} width={splitX - M.l} height={splitY - sy(yMax)} fill="var(--accent)" opacity={0.055} rx={6} />
         {/* grid */}
@@ -120,7 +120,7 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
         <line x1={M.l} x2={W - M.r} y1={splitY} y2={splitY} stroke="var(--line)" strokeDasharray="3 4" />
         {/* quadrant labels */}
         <text x={M.l + 10} y={sy(yMax) + 18} className="fill-[var(--accent)] text-[12px] font-semibold tracking-[0.12em]">
-          WHITE SPACE
+          OPPORTUNITY DELTA
         </text>
         <text x={M.l + 10} y={sy(yMax) + 32} className="fill-[var(--faint)] text-[11px]">
           audiences respond · few creators
@@ -202,7 +202,7 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
           <svg width="12" height="12">
             <circle cx="6" cy="6" r="4.5" fill="var(--accent)" fillOpacity="0.3" stroke="var(--accent)" />
           </svg>
-          White space
+          Opportunity delta
         </span>
         <span className="inline-flex items-center gap-1.5">
           <svg width="14" height="14">

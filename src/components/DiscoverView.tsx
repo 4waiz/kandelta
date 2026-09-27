@@ -60,7 +60,7 @@ export function DiscoverView() {
           <div className="flex items-center gap-2 text-sm font-medium">
             <AlertTriangle size={16} className="text-warn" /> {error}
           </div>
-          <p className="text-sm text-muted">No cached result exists for this search yet. WhiteSpace never substitutes made-up data.</p>
+          <p className="text-sm text-muted">No cached result exists for this search yet. KanDelta never substitutes made-up data.</p>
           <Button variant="outline" onClick={retry}>
             <RotateCw size={14} /> Try again
           </Button>
@@ -84,11 +84,11 @@ export function DiscoverView() {
         <div className="fade-in">
           <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">WhiteSpace map</div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">Delta Map</div>
               <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{data.query}</h1>
               <p className="mt-2 max-w-3xl text-sm text-muted">
                 Oriane measured <span className="text-fg">{fmtInt(data.baseline.n)} videos</span> ({fmtCompact(data.baseline.views)} views) and{" "}
-                {data.opportunities.length} creative angles. {data.opportunities.filter((o) => o.quadrant === "white-space").length} sit in white space.
+                {data.opportunities.length} creative angles. {data.opportunities.filter((o) => o.quadrant === "white-space").length} show the high-response, low-supply delta.
               </p>
             </div>
             <div className="flex items-center gap-4">

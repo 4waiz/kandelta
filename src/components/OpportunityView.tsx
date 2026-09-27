@@ -138,7 +138,7 @@ export function OpportunityView() {
   return (
     <div className="pt-6">
       <Link href={`/discover?q=${encodeURIComponent(q)}`} className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-fg">
-        <ArrowLeft size={14} /> WhiteSpace map · {data.query}
+        <ArrowLeft size={14} /> Delta Map · {data.query}
       </Link>
 
       {/* ---------- OVERVIEW ---------- */}
@@ -280,7 +280,7 @@ export function OpportunityView() {
                     </li>
                   ))}
               </ul>
-              <p className="mt-3 text-xs text-faint">WhiteSpace only reports a gap when the data shows one.</p>
+              <p className="mt-3 text-xs text-faint">KanDelta only reports a gap when the data shows one.</p>
             </div>
           ) : null}
         </div>

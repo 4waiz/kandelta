@@ -20,7 +20,7 @@ export default function VaultPage() {
       <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">Evidence Vault</div>
       <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Your swipe file of real videos</h1>
       <p className="mt-2 max-w-2xl text-sm text-muted">
-        Save evidence from any opportunity. WhiteSpace keeps the source link, thumbnail and Oriane intelligence. Video files stay on the platforms. Saved in this browser.
+        Save evidence from any opportunity. KanDelta keeps the source link, thumbnail and Oriane intelligence. Video files stay on the platforms. Saved in this browser.
       </p>
 
       {!collections.length ? (

@@ -174,7 +174,7 @@ export function AudienceLab({ initialScript, ctx }: { initialScript: string; ctx
               <div key={rec.id} className={cn("rounded-lg border p-4", i === 0 ? "border-accent/35 bg-accent/5" : "border-line-soft")}>
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    {i === 0 ? <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-accent">WhiteSpace recommends</div> : null}
+                    {i === 0 ? <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-accent">KanDelta recommends</div> : null}
                     <div className="text-sm font-medium">{rec.title}</div>
                   </div>
                   {["stakes-first", "price", "arabic", "soft-cta"].includes(rec.id) ? (

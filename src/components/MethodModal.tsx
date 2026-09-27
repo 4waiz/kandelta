@@ -23,7 +23,7 @@ export function MethodButton({ label = "How is this calculated?" }: { label?: st
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">No black box</div>
-                <h3 className="mt-1 text-lg font-semibold">How WhiteSpace scores an opportunity</h3>
+                <h3 className="mt-1 text-lg font-semibold">How KanDelta scores an opportunity</h3>
               </div>
               <button onClick={() => setOpen(false)} className="rounded-md p-1 text-faint hover:text-fg" aria-label="Close">
                 <X size={18} />

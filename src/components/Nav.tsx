@@ -13,7 +13,7 @@ export function Logo({ className }: { className?: string }) {
         <rect x="1" y="1" width="18" height="18" rx="4" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.55" />
         <rect x="4.5" y="4.5" width="5" height="5" rx="1" fill="var(--accent)" />
       </svg>
-      <span className="text-[15px] font-semibold tracking-tight">WhiteSpace</span>
+      <span className="text-[15px] font-semibold tracking-tight">KanDelta</span>
     </span>
   );
 }
@@ -33,7 +33,7 @@ export function Nav() {
     <header className="sticky top-0 z-30 border-b border-line-soft bg-bg/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-6">
-          <Link href="/" aria-label="WhiteSpace home">
+          <Link href="/" aria-label="KanDelta home">
             <Logo />
           </Link>
           <nav className="hidden items-center gap-1 sm:flex">
