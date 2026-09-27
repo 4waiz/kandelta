@@ -1,2 +1,3 @@
 - [Artifact runtime configuration](artifact-runtime-configuration.md) — validated artifact metadata rejects .replit deployment keys; managed commands run from the artifact directory.
 - [Oriane partial responses](oriane-partial-responses.md) — real saved searches can be successful HTTP 206; check data shape, not 200 alone.
+- [Visual relevance boundaries](visual-relevance-boundaries.md) — high-score frames can be off-topic; never treat reviewed examples as a population recount or proof of local product use.

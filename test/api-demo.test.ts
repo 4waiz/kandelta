@@ -53,6 +53,16 @@ test("pinned search, measured map, real-video detail, and repeat load work witho
   const detail = await detailResponse.json();
   assert.equal(detail.opportunity.id, id);
   assert(detail.evidence.length > 0);
+  assert.equal(detail.review.sampled, detail.review.qualified + detail.review.excluded.length);
+  assert.equal(detail.review.qualified, detail.evidence.length);
+  assert.equal(detail.opportunity.stats.n, analysis.opportunities.find((o: { id: string }) => o.id === id).stats.n);
+  assert(detail.review.excluded.some((v: { visualMatch: number | null }) => (v.visualMatch ?? 0) >= 0.85), "high frame scores must not bypass topic review");
+  assert(detail.review.excluded.some((v: { reason: string }) => /on-topic|figurative|entertainment/.test(v.reason)));
+  assert(detail.review.excluded.some((v: { handle: string }) => v.handle === "filmsbybritany"), "figurative running is excluded");
+  assert(detail.evidence.some((v: { creator: { handle: string } }) => v.creator.handle === "violetamorgan"), "on-topic non-English shoe content stays eligible");
+  assert(detail.evidence.every((v: { id: string }) => !!detail.exampleContext[v.id]?.topicSignal));
+  assert(detail.brief.references.every((r: { videoId: string }) => detail.evidence.some((v: { id: string }) => v.id === r.videoId)));
+  assert(detail.creators.every((c: { videos: { id: string }[] }) => c.videos.every(v => detail.evidence.some((e: { id: string }) => e.id === v.id))));
   assert(detail.dna.sample > 0);
   assert(detail.brief.title);
   assert.equal(detail.sources.live, 0);

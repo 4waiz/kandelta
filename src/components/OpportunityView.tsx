@@ -124,7 +124,6 @@ export function OpportunityView() {
   const paid = data.evidence.filter((v) => v.sponsored || v.likelyBoosted);
   const visualGap = data.crowdGaps.find((g) => g.id === "visual");
   const otherGaps = data.crowdGaps.filter((g) => g.id !== "visual" && g.isGap);
-  const missed = data.captionOverlap ? o.stats.n - data.captionOverlap.n : null;
   const topWatched = data.evidence.slice().sort((a, b) => b.views - a.views).slice(0, 3);
   const topWatchedPaid = topWatched.filter((v) => v.sponsored || v.likelyBoosted);
   const from = { query: data.query, opportunity: data.brief.title };
@@ -132,6 +131,9 @@ export function OpportunityView() {
   const whyVideo = (v: (typeof data.evidence)[number]) => {
     const parts: string[] = [];
     if (v.visualMatch !== null) parts.push(`Oriane vision match ${v.visualMatch.toFixed(2)}`);
+    const context = data.exampleContext[v.id];
+    if (context?.topicSignal) parts.push(`Topic context: ${context.topicSignal}`);
+    if (context) parts.push(context.productMention ? "Product mentioned (not tested)" : "No product mention", context.locationMention ? "Location mentioned (not verified)" : "No location mention");
     return parts.join(" · ");
   };
 
@@ -148,7 +150,7 @@ export function OpportunityView() {
             <div className="flex flex-wrap items-center gap-2">
               {o.kind === "visual" ? (
                 <Chip tone="accent">
-                  <Eye size={12} /> Seen in the video
+                   <Eye size={12} /> Visual frame match
                 </Chip>
               ) : (
                 <Chip>
@@ -161,7 +163,7 @@ export function OpportunityView() {
               </Chip>
             </div>
             <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{o.name}</h1>
-            <p className="mt-2 text-sm text-muted">{o.description}</p>
+             <p className="mt-2 text-sm text-muted">{o.kind === "visual" ? `${o.description} This is a similarity match, not confirmation of heat, product use, or location.` : o.description}</p>
           </div>
           <div className="text-right">
             <div className="text-[11px] font-medium uppercase tracking-wider text-faint">Opportunity score</div>
@@ -175,35 +177,30 @@ export function OpportunityView() {
         <div className="mt-6 rounded-xl border border-accent/25 bg-accent/[0.04] p-5">
           <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">Why this matters</div>
           <p className="mt-2 text-lg leading-relaxed">
-            Across the {fmtInt(data.market.n)} {data.market.universe} videos Oriane indexed in the last 3 months, only{" "}
-            <span className="font-semibold">{fmtInt(o.stats.n)}</span> ({fmtPct(o.supplyShare)}) {o.kind === "visual" ? "show this" : "use this angle"}. Those videos earn{" "}
+            Across the {fmtInt(data.market.n)} {data.market.universe} videos Oriane indexed in the last 3 months,{" "}
+            <span className="font-semibold">{fmtInt(o.stats.n)}</span> ({fmtPct(o.supplyShare)}) {o.kind === "visual" ? "matched the visual prompt at the frame level" : "matched this angle's text filter"}. The matched population records{" "}
             <span className="font-semibold text-accent">{fmtX(o.engagementIndex)} the engagement per view</span> and {fmtX(o.reachIndex)} the views per follower of the average{" "}
             {data.market.universe} video.
           </p>
           <p className="mt-2 text-sm text-muted">
             <span className="font-medium text-fg">Why now:</span> {o.stage} stage
-            {o.momentum !== null
-              ? o.momentum < 1
-                ? `, and new supply is slowing (last 30 days at ${fmtX(o.momentum)} the market's pace), so the space is not filling up.`
-                : `, but new supply is arriving at ${fmtX(o.momentum)} the market's pace over the last 30 days, so the window is closing.`
-              : "."}{" "}
+            {o.momentum !== null ? `; matched posts arrived at ${fmtX(o.momentum)} the market's pace over the last 30 days.` : "."}{" "}
             Observed relationship, not a guarantee.
           </p>
-          {missed !== null && data.captionOverlap ? (
+          {data.captionOverlap ? (
             <p className="mt-3 flex items-start gap-2 text-sm text-muted">
               <Eye size={15} className="mt-0.5 shrink-0 text-accent" />
               <span>
-                Found by watching, not reading: only {fmtInt(data.captionOverlap.n)} of these {fmtInt(o.stats.n)} videos mention {data.captionOverlap.phrases.join(", ").replace(/, ([^,]*)$/, " or $1")} in their caption or speech. A caption or transcript search would miss{" "}
-                <span className="text-fg">{fmtPct(missed / o.stats.n, 0)}</span> of this opportunity. Oriane&apos;s vision sees it in the frames.
+                A separate text search found {fmtInt(data.captionOverlap.n)} posts mentioning {data.captionOverlap.phrases.join(", ").replace(/, ([^,]*)$/, " or $1")}. This is not an intersection count with the {fmtInt(o.stats.n)} visual matches and does not prove the posts tested a product.
               </span>
             </p>
           ) : null}
-          {topWatchedPaid.length >= 2 ? (
+          {topWatched.length > 0 && topWatchedPaid.length >= 2 ? (
             <p className="mt-2 flex items-start gap-2 text-sm text-muted">
               <ShieldCheck size={15} className="mt-0.5 shrink-0 text-warn" />
               <span>
-                {topWatchedPaid.length === topWatched.length ? `All ${topWatched.length}` : `${topWatchedPaid.length} of the ${topWatched.length}`} most-watched videos with this look are disclosed ads or likely-boosted
-                brand posts ({topWatchedPaid.map((v) => "@" + v.creator.handle).join(", ")}). Brands already pay to put this look in front of people, while organic creator supply stays small.
+                {topWatchedPaid.length === topWatched.length ? `All ${topWatched.length}` : `${topWatchedPaid.length} of the ${topWatched.length}`} most-watched qualified examples with this look are disclosed ads or likely-boosted
+                 posts ({topWatchedPaid.map((v) => "@" + v.creator.handle).join(", ")}). This sampled distribution is not a measure of organic supply in the full population.
               </span>
             </p>
           ) : null}
@@ -236,9 +233,12 @@ export function OpportunityView() {
       <section className="mt-10">
         <SectionTitle id="evidence" eyebrow="Evidence" title="Real videos from Oriane">
           <span className="text-xs text-faint">
-            {organic.length} organic examples{data.hiddenUnsafe ? ` · ${data.hiddenUnsafe} hidden by brand-safety filter` : ""}
+            {data.review.qualified} qualified of {data.review.sampled} sampled posts
           </span>
         </SectionTitle>
+        <p className="mt-3 text-xs text-muted">Oriane&apos;s {fmtInt(o.stats.n)} matched posts and response metrics are population statistics, unchanged by this second-stage example review. {data.review.criteria} None of these examples alone proves running-shoe performance or UAE market fit.</p>
+        {data.review.excluded.length > 0 && <details className="mt-3 rounded-lg border border-line bg-panel p-3 text-xs text-muted" data-testid="review-exclusions"><summary className="cursor-pointer">{data.review.excluded.length} sampled posts excluded — see reasons</summary><ul className="mt-2 space-y-2">{data.review.excluded.map(v => <li key={v.id}>@{v.handle} · {v.visualMatch !== null ? `frame score ${v.visualMatch.toFixed(2)} · ` : ""}{v.reason}</li>)}</ul></details>}
+        {!data.evidence.length && <p className="mt-4 text-sm text-muted">No qualified example videos in the sampled result pages. Do not use this angle as a product or local-market proof without further review.</p>}
         <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
           {organic.slice(0, 8).map((v) => (
             <VideoCard key={v.id} v={v} marketReach={data.market.reach} marketEr={data.market.er} why={whyVideo(v)} saved={isSaved(v.id)} onSave={() => save(data.brief.title, v, from)} />
@@ -291,7 +291,7 @@ export function OpportunityView() {
 
       {/* ---------- CREATIVE DNA ---------- */}
       <section className="mt-14">
-        <SectionTitle id="dna" eyebrow="Creative DNA" title="What the winners have in common">
+        <SectionTitle id="dna" eyebrow="Creative DNA" title="Patterns in qualified examples">
           <span className="text-xs text-faint">Measured on {data.dna.sample} organic evidence videos</span>
         </SectionTitle>
         <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">

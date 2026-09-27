@@ -60,6 +60,8 @@ export function hookType(text: string): string {
 export function deriveDNA(videos: Video[], market: GroupStats): CreativeDNA {
   void market;
   const n = videos.length;
+  // With no qualified examples there is no basis for creative patterns.
+  if (!n) return { sample: 0, hooks: [], hookTypes: [], traits: [], hashtags: [], audienceVoice: [], platforms: [], norms: { talkFirstShare: null, medianDuration: null, originalAudioShare: null, medianWordsPerSecond: null, ctaShare: 0, topHookType: null, arabicShare: 0 } };
   const transcribed = videos.filter((v) => v.firstSpeechAt !== null);
   const talkFirst = transcribed.filter((v) => (v.firstSpeechAt ?? 99) <= 1);
   const visualFirst = videos.filter((v) => v.firstSpeechAt === null || v.firstSpeechAt > 3);
