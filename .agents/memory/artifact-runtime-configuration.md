@@ -9,7 +9,7 @@ Keep workspace-level deployment settings out of an artifact's service manifest, 
 
 **How to apply:** In this artifact-based project, production commands start at the repository root; use bare root build/run commands with no directory changes. Development workflow commands may start in the artifact directory. Validate the manifest and restart the managed workflow after changes.
 
-**Why:** A command that unconditionally changed two directories upward worked in Preview but failed to find the root lockfile during publication because the deployment command was already at the repository root.
+**Why:** A command that unconditionally changed two directories upward worked in Preview but failed to find the root lockfile during publication because deployment already started at the repository root. A later publish also failed during `npm ci` despite a successful local run; do not treat local installation success as proof the publishing environment will accept the same install mode.
 
 Publishing can build every registered artifact service, including a legacy API service no longer used by the canonical app. Remove an obsolete artifact from the project after confirming the canonical app owns those routes.
 

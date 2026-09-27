@@ -24,3 +24,7 @@ WHITESPACE_CACHE_TTL_HOURS = "168"
 [[ports]]
 localPort = 21265
 externalPort = 80
+
+[[ports]]
+localPort = 21301
+externalPort = 3000
