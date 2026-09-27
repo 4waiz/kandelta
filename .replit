@@ -1,12 +1,8 @@
 modules = ["nodejs-24"]
+run = "npm run start -- -H 0.0.0.0 -p $PORT"
 
 [deployment]
-router = "application"
 deploymentTarget = "autoscale"
-
-[deployment.postBuild]
-args = ["pnpm", "store", "prune"]
-env = { "CI" = "true" }
 
 [workflows]
 runButton = "Project"
