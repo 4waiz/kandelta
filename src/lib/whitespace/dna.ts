@@ -89,12 +89,15 @@ export function deriveDNA(videos: Video[], market: GroupStats): CreativeDNA {
   }
   if (medDur !== null) {
     const short = videos.filter((v) => (v.duration ?? 0) <= 30);
+    const long = videos.filter((v) => (v.duration ?? 0) > 30);
+    const longForm = long.length >= short.length;
     traits.push({
       label: "Duration",
-      value: `Median ${Math.round(medDur)}s · ${short.length} of ${n} run 30s or less`,
-      support: short.length,
+      value: longForm ? `Median ${Math.round(medDur)}s: story-length, not a quick cut` : `Median ${Math.round(medDur)}s: short and fast`,
+      support: longForm ? long.length : short.length,
       of: n,
-      videoIds: short.map((v) => v.id),
+      videoIds: (longForm ? long : short).map((v) => v.id),
+      note: longForm ? "Share of videos longer than 30s." : "Share of videos 30s or shorter.",
     });
   }
   if (wps !== null) {

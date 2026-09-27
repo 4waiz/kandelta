@@ -2,7 +2,8 @@ import "server-only";
 import { searchContents } from "../oriane/client";
 import { normalizeVideo, type Video } from "../oriane/normalize";
 import { ANGLES } from "./concepts";
-import { analyzeMarket, buildBody, resolveAngle, resolveMarket, type Opportunity } from "./analyze";
+import { analyzeMarket, buildBody, resolveAngle, resolveMarket, type CrowdGap, type Opportunity } from "./analyze";
+import { phraseNode } from "./market";
 import type { GroupStats } from "./scoring";
 import { clamp } from "./scoring";
 import { deriveDNA, type CreativeDNA } from "./dna";
@@ -31,12 +32,16 @@ export interface OpportunityDetail {
   note: string | null;
   opportunity: Opportunity;
   rank: number;
-  market: { label: string; location: string | null; n: number; reach: number; er: number; window: { after: string; before: string } };
+  market: { label: string; universe: string; location: string | null; n: number; reach: number; er: number; window: { after: string; before: string } };
+  totalAngles: number;
   evidence: Video[];
   hiddenUnsafe: number;
   dna: CreativeDNA;
   creators: CreatorFit[];
   brief: Brief;
+  crowdGaps: CrowdGap[];
+  /** Vision angles only: how many visually-matched videos also SAY or WRITE the angle (caption/transcript). */
+  captionOverlap: { phrases: string[]; n: number } | null;
   sources: Record<string, number>;
 }
 
@@ -80,7 +85,7 @@ async function creatorFits(evidence: Video[], phrases: string[], marketPhrases: 
   const ranked = [...byCreator.entries()]
     .map(([id, vids]) => ({ id, vids: vids.sort((a, b) => (b.reach ?? 0) - (a.reach ?? 0)) }))
     .sort((a, b) => (b.vids[0].reach ?? 0) - (a.vids[0].reach ?? 0))
-    .slice(0, 5);
+    .slice(0, 6);
 
   const fits = await Promise.all(
     ranked.map(async ({ id, vids }) => {
@@ -131,7 +136,10 @@ async function creatorFits(evidence: Video[], phrases: string[], marketPhrases: 
       } satisfies CreatorFit;
     }),
   );
-  return fits.sort((a, b) => b.fit - a.fit);
+  // One row per creator handle (same person across Instagram + TikTok), and only creators who actually cover the market.
+  const byHandle = new Map<string, CreatorFit>();
+  for (const f of fits.sort((a, b) => b.fit - a.fit)) if (!byHandle.has(f.handle)) byHandle.set(f.handle, f);
+  return [...byHandle.values()].filter((f) => f.baselineVideos === 0 || f.components.topic >= 0.15);
 }
 
 export async function opportunityDetail(query: string, angleId: string): Promise<OpportunityDetail> {
@@ -167,6 +175,15 @@ export async function opportunityDetail(query: string, angleId: string): Promise
   const rankKey = (v: (typeof evidence)[number]) => (def.kind === "visual" ? (v.visualMatch ?? 0) * 10 : 0) + Math.log10(1 + (v.reach ?? 0));
   evidence.sort((a, b) => Number(a.sponsored || a.likelyBoosted) - Number(b.sponsored || b.likelyBoosted) || rankKey(b) - rankKey(a));
 
+  // For vision angles: how many of the matched videos would a caption/transcript search also have found?
+  let captionOverlap: OpportunityDetail["captionOverlap"] = null;
+  const template = ANGLES.find((a) => a.id === def.templateId);
+  if (def.kind === "visual" && template) {
+    const r = await searchContents({ limit: 1, offset: 0, projection: "basic" }, buildBody(ctx, [phraseNode(template.phrases)], def.filters));
+    sources[r.source] = (sources[r.source] ?? 0) + 1;
+    captionOverlap = { phrases: template.phrases, n: r.response.metadata.pagination?.totalCount ?? 0 };
+  }
+
   const base = analysis.baseline;
   const dna = deriveDNA(organic.length >= 5 ? organic : evidence, base);
   const creators = await creatorFits(organic.length >= 3 ? organic : evidence, def.phrases, analysis.market.phrases, base, analysis.market.window.before, sources);
@@ -179,8 +196,10 @@ export async function opportunityDetail(query: string, angleId: string): Promise
     note: analysis.note,
     opportunity,
     rank,
+    totalAngles: analysis.opportunities.length,
     market: {
       label: analysis.market.label,
+      universe: analysis.market.universe,
       location: analysis.market.location?.label ?? null,
       n: base.n,
       reach: base.reach,
@@ -192,6 +211,8 @@ export async function opportunityDetail(query: string, angleId: string): Promise
     dna,
     creators,
     brief,
+    crowdGaps: analysis.crowdGaps,
+    captionOverlap,
     sources,
   };
 }

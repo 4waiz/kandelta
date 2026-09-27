@@ -115,10 +115,10 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
   const refVid = dna.hooks[0] ?? null;
   const references = evidence.slice(0, 4).map((v) => ({ videoId: v.id, handle: v.creator.handle, url: v.url, thumbnail: v.thumbnail, views: v.views, reach: v.reach }));
 
-  const opportunity = `${o.name} holds ${pct(o.supplyShare)} of ${topic} video supply (${o.stats.n.toLocaleString("en-US")} of ${analysis.baseline.n.toLocaleString("en-US")} videos, last 3 months) yet earns ${times(o.reachIndex)} the market's views per follower and ${times(o.engagementIndex)} its engagement per view.`;
+  const opportunity = `${o.name} holds ${pct(o.supplyShare)} of ${analysis.market.universe} video supply (${o.stats.n.toLocaleString("en-US")} of ${analysis.baseline.n.toLocaleString("en-US")} videos, last 3 months) yet earns ${times(o.reachIndex)} the market's views per follower and ${times(o.engagementIndex)} its engagement per view.`;
   const whyNow = `Stage: ${o.stage}.${o.momentum !== null ? ` Creators added ${o.momentum >= 1 ? "this angle " + times(o.momentum) + " as fast as" : "this angle more slowly than"} the market over the last 30 days.` : ""} The window is open while supply is still thin.`;
 
-  const audience = `${place ? `${place}-based ` : ""}${topic} viewers on TikTok and Instagram${dna.norms.arabicShare > 0 ? ", English + Arabic" : ""}. They respond to proof over polish: the evidence videos' top comments ask about real-world performance.`;
+  const audience = `${place ? `${place}-based ` : ""}${topic} viewers on TikTok and Instagram${dna.norms.arabicShare > 0 ? ", English + Arabic" : ""}. The winning examples are voice-led and mostly use the creator's own audio (${Math.round((dna.norms.originalAudioShare ?? 0) * 100)}% of evidence).`;
 
   const script = [
     `HOOK (0–2s): ${hook}`,

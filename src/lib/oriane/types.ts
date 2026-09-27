@@ -29,6 +29,7 @@ export interface ContentFilters {
   caption?: TextFilter;
   transcript?: TextFilter;
   hashtags?: TextFilter;
+  mentionHandles?: TextFilter;
   captionLanguage?: { includes?: string[]; excludes?: string[] };
   publishedAt?: { after?: string; before?: string };
   profileFollowersCount?: { min?: number; max?: number };

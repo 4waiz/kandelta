@@ -2,7 +2,8 @@ import type { ContentQuery } from "../oriane/types";
 
 export interface MarketSpec {
   query: string;
-  label: string; // human topic, e.g. "running"
+  label: string; // human topic, e.g. "running shoes"
+  universe: string; // what the measured videos are about, e.g. "running"
   phrases: string[]; // caption phrases defining the market
   location: { label: string; phrases: string[] } | null;
   window: { after: string; before: string; days: number };
@@ -81,7 +82,8 @@ export function parseMarket(input: string): MarketSpec {
   }
   const topic = rest.replace(FILLER, " ").replace(/[^\p{L}\p{N}&' ]/gu, " ").replace(/\s+/g, " ").trim() || "running";
   const phrases = TOPIC_SYNONYMS[topic] ?? [topic];
-  return { query, label: topic, phrases, location, window: analysisWindow(3) };
+  const universe = topic === "running shoes" ? "running" : topic;
+  return { query, label: topic, universe, phrases, location, window: analysisWindow(3) };
 }
 
 // Market universe as an Oriane query node (caption phrases, optionally AND a location clause).
