@@ -21,6 +21,7 @@ import type {
   ApiError,
   GetOpportunity200,
   GetOpportunityParams,
+  GetWhiteSpaceHealth200,
   HealthStatus
 } from './api.schemas';
 
@@ -50,6 +51,83 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetWhiteSpaceHealthUrl = () => {
+
+
+
+
+  return `/api/health`
+}
+
+/**
+ * @summary WhiteSpace service and Oriane configuration status
+ */
+export const getWhiteSpaceHealth = async ( options?: Parameters<typeof customFetch>[1]): Promise<GetWhiteSpaceHealth200> => {
+
+  return customFetch<GetWhiteSpaceHealth200>(getGetWhiteSpaceHealthUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetWhiteSpaceHealthQueryKey = () => {
+    return [
+    `/api/health`
+    ] as const;
+    }
+
+
+export const getGetWhiteSpaceHealthQueryOptions = <TData = Awaited<ReturnType<typeof getWhiteSpaceHealth>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getWhiteSpaceHealth>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetWhiteSpaceHealthQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWhiteSpaceHealth>>> = ({ signal }) => getWhiteSpaceHealth({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWhiteSpaceHealth>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetWhiteSpaceHealthQueryResult = NonNullable<Awaited<ReturnType<typeof getWhiteSpaceHealth>>>
+export type GetWhiteSpaceHealthQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary WhiteSpace service and Oriane configuration status
+ */
+
+export function useGetWhiteSpaceHealth<TData = Awaited<ReturnType<typeof getWhiteSpaceHealth>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getWhiteSpaceHealth>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetWhiteSpaceHealthQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getAnalyzeMarketUrl = (params: AnalyzeMarketParams,) => {
   const normalizedParams = new URLSearchParams();

@@ -18,8 +18,8 @@ export const ANGLES: Angle[] = [
     phrases: ["heat", "hot weather", "humidity"],
     description: "Content framed around heat, hot weather or humidity.",
     premise: "Put {topic} through real heat and show what holds up.",
-    hook: "Everyone talks about {topic} in perfect conditions. What happens at 42°C?",
-    structure: ["Temperature proof on screen", "Close-up of the product/gear", "Start the activity outdoors", "The struggle: sweat, sun, environment", "Honest result and verdict"],
+    hook: "What changes when you take {topic} into real heat?",
+    structure: ["Show measured conditions if available", "Close-up of the subject", "Start the activity outdoors", "Show what happened, including difficulties", "Honest result and verdict"],
   },
   {
     id: "tested",

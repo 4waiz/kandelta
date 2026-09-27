@@ -37,6 +37,7 @@ export interface OpportunityDetail {
   creators: CreatorFit[];
   brief: Brief;
   sources: Record<string, number>;
+  newestFetch: string | null;
 }
 
 function median(xs: number[]): number | null {
@@ -192,5 +193,6 @@ export async function opportunityDetail(query: string, angleId: string): Promise
     creators,
     brief,
     sources,
+    newestFetch: analysis.newestFetch,
   };
 }

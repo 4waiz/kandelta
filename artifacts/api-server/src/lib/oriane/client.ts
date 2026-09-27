@@ -64,6 +64,20 @@ interface CacheEntry {
 const memory = new Map<string, CacheEntry>();
 let liveCalls = 0;
 export const liveCallCount = () => liveCalls;
+export function cacheStatus() {
+  let cachedResponses = 0;
+  try {
+    cachedResponses = fs.readdirSync(CACHE_DIR).filter((name) => /^[a-f0-9]{20}\.json$/.test(name)).length;
+  } catch {
+    // An empty or read-only data directory is valid.
+  }
+  return {
+    status: "ok" as const,
+    orianeConfigured: Boolean(process.env.ORIANE_API_KEY),
+    cachedResponses,
+    mode: FIXTURE_ONLY ? "saved-responses-only" : "live-with-cache",
+  };
+}
 
 function readDisk(key: string): CacheEntry | null {
   try {

@@ -61,7 +61,7 @@ function titleCase(s: string) {
 export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, creators, compoundOf }: BriefInput): Brief {
   const topic = analysis.market.label;
   const place = analysis.market.location?.label ?? null;
-  const heatWords = place ? `${place} heat` : "real heat";
+  const heatWords = place ? `${place} heat` : "outdoor heat";
   const format = compoundOf ? ANGLES.find((a) => a.id === compoundOf) : null;
 
   const title = angle.id === "heat" || compoundOf
@@ -70,30 +70,30 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
 
   const hook = compoundOf
     ? compoundOf === "challenge"
-      ? `Everyone reviews ${topic} in perfect conditions. Can they survive ${place ? `${place}` : "desert"} heat at 42°C?`
+      ? `What changes when you take ${topic} into ${heatWords}? Let's test it.`
       : compoundOf === "tested"
-        ? `I tested ${topic} at 42°C so you don't have to.`
-        : `3 things nobody tells you about ${topic} in extreme heat.`
+        ? `I tested ${topic} outdoors so you don't have to.`
+        : `3 things to test about ${topic} in outdoor heat.`
     : fill(angle.hook, topic);
 
   const structure = compoundOf
     ? [
-        "Temperature proof on screen (phone weather app or thermometer)",
+        "Show the real conditions on screen, if measured",
         `Close-up of the ${topic} before the test`,
         format?.id === "tips" ? "Tip 1 demonstrated outdoors" : "Start the run in full sun",
         format?.id === "tips" ? "Tip 2 and the mistake people make" : "The struggle: sweat, heat shimmer, pace dropping",
-        "Result and honest verdict, with a number on screen",
+        "Result and honest verdict; show a number only if measured",
       ]
     : angle.structure.map((s) => fill(s, topic));
 
   const premise = compoundOf
-    ? `Put ${topic} through ${heatWords} on camera and show what holds up. Few creators do this, and the few who do out-reach the market.`
+    ? `Test ${topic} in ${heatWords} on camera and show what happens. This is a creative recommendation based on a visual-match slice, not evidence that any particular product withstands heat.`
     : fill(angle.premise, topic);
 
   const talkFirst = (dna.norms.talkFirstShare ?? 0) >= 0.5;
   const med = dna.norms.medianDuration;
   const openingShot = talkFirst
-    ? `Open talking within the first second (as ${Math.round((dna.norms.talkFirstShare ?? 0) * 100)}% of the transcribed evidence does), with the temperature or the stakes visible in frame.`
+    ? `Open talking within the first second (as ${Math.round((dna.norms.talkFirstShare ?? 0) * 100)}% of the transcribed evidence does), with the conditions or stakes visible in frame.`
     : `Open on a strong visual (the environment or the product under stress) before anyone speaks. Most evidence videos let the picture carry the first seconds.`;
 
   const tone =
@@ -105,7 +105,9 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
   const followerBand = topCreators.length
     ? `${Math.round(Math.min(...topCreators.map((c) => c.followers)) / 1000)}K–${Math.round(Math.max(...topCreators.map((c) => c.followers)) / 1000)}K followers`
     : "mid-sized creators";
-  const creatorProfile = `Creators who already out-perform their own baseline on this angle (see Creator Fit). Top matches sit around ${followerBand}. Prioritise proven execution over follower count.`;
+  const creatorProfile = topCreators.length
+    ? `Potential collaborators observed in the evidence, around ${followerBand}. Check each creator's supporting videos and personal baseline where available; this is not an endorsement.`
+    : "Find creators with relevant on-camera experience. No creator-history match is established for this slice.";
 
   const ctaTrait = dna.traits.find((t) => t.label === "Call to action");
   const cta = ctaTrait && dna.norms.ctaShare >= 0.3
@@ -116,12 +118,12 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
   const references = evidence.slice(0, 4).map((v) => ({ videoId: v.id, handle: v.creator.handle, url: v.url, thumbnail: v.thumbnail, views: v.views, reach: v.reach }));
 
   const opportunity = `${o.name} holds ${pct(o.supplyShare)} of ${topic} video supply (${o.stats.n.toLocaleString("en-US")} of ${analysis.baseline.n.toLocaleString("en-US")} videos, last 3 months) yet earns ${times(o.reachIndex)} the market's views per follower and ${times(o.engagementIndex)} its engagement per view.`;
-  const whyNow = `Stage: ${o.stage}.${o.momentum !== null ? ` Creators added ${o.momentum >= 1 ? "this angle " + times(o.momentum) + " as fast as" : "this angle more slowly than"} the market over the last 30 days.` : ""} The window is open while supply is still thin.`;
+  const whyNow = `Observed supply stage: ${o.stage}.${o.momentum !== null ? ` Its last-30-day share of posts is ${times(o.momentum)} the market's last-30-day share.` : ""} This describes the measured window, not future demand.`;
 
-  const audience = `${place ? `${place}-based ` : ""}${topic} viewers on TikTok and Instagram${dna.norms.arabicShare > 0 ? ", English + Arabic" : ""}. They respond to proof over polish: the evidence videos' top comments ask about real-world performance.`;
+  const audience = `${topic} viewers on TikTok and Instagram${place ? `; test local relevance in ${place} separately because location-tagged evidence is limited` : ""}. Observed post metrics do not establish a demographic or consumer preference.`;
 
   const script = [
-    `HOOK (0–2s): ${hook}`,
+    `SUGGESTED HOOK: ${hook}`,
     ...structure.map((s, i) => `BEAT ${i + 1}: ${s}`),
     `CTA: ${compoundOf === "challenge" ? "Would you run in this? Comment the temperature you'd tap out at." : "What should we test next? Comment below."}`,
   ].join("\n");
@@ -142,10 +144,10 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
       hook,
       opening: "Cold open on the most extreme moment. No logo, no intro card.",
       structure: structure.slice(0, 5),
-      caption: `${hook.split(".")[0]}. ${tagsFor("tiktok") || "#running #heat"}`.trim(),
+      caption: `${hook.split(".")[0]}. ${tagsFor("tiktok")}`.trim(),
       cta: isHeat ? "Comment prompt tied to the test (\"What temp would you tap out at?\")" : "Comment prompt tied to the verdict (\"Agree or disagree?\")",
-      onScreenText: isHeat ? ["42°C", "Can they survive?", "Verdict"] : [hook.split(/[.?!]/)[0], "Beat labels", "Verdict"],
-      pacing: isHeat ? "Fast. The hook question and the temperature must both land inside 2 seconds." : "Fast. The hook must land inside 2 seconds.",
+      onScreenText: isHeat ? ["Actual conditions, if measured", "What happened?", "Verdict"] : [hook.split(/[.?!]/)[0], "Beat labels", "Verdict"],
+      pacing: "Test a fast opening; the proposed timing is a creative recommendation, not a measured outcome.",
       basis: tk ? `Median TikTok evidence duration ${Math.round(tk.medianDuration ?? 0)}s (${tk.count} videos).` : "No TikTok videos in this evidence set; generic suggestion.",
     },
     {
@@ -155,9 +157,9 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
       hook,
       opening: "Same cold open, slightly more polished grade; product visible by beat 2.",
       structure: structure.slice(0, 5),
-      caption: `${premise} ${tagsFor("instagram") || "#running #runningshoes"}`.trim(),
+      caption: `${premise} ${tagsFor("instagram")}`.trim(),
       cta: isHeat ? "Save + share prompt (\"Send this to the runner who complains about the heat\")" : "Save + share prompt",
-      onScreenText: isHeat ? ["42°C in " + (place ?? "the desert"), "Beat 1–5 labels", "Verdict card"] : ["Beat 1–5 labels", "Verdict card"],
+      onScreenText: isHeat ? ["Actual conditions, if measured", "Beat labels", "Verdict card"] : ["Beat labels", "Verdict card"],
       pacing: "Medium. Allow one beat of B-roll for texture.",
       basis: ig ? `Median Instagram evidence duration ${Math.round(ig.medianDuration ?? 0)}s (${ig.count} videos).` : "No Instagram videos in this evidence set; generic suggestion.",
     },
@@ -165,10 +167,10 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
       platform: "YouTube Shorts",
       aspect: "9:16",
       length: "30–45s",
-      hook: isHeat ? `${titleCase(topic)} vs 42°C: what actually happens` : hook,
+      hook: isHeat ? `${titleCase(topic)} in the heat: what actually happens` : hook,
       opening: "Title-style framing in the first frame; state the question explicitly.",
       structure: [...structure.slice(0, 4), "Recap card with the verdict and the numbers"],
-      caption: isHeat ? `${titleCase(topic)} heat test at 42°C. Honest results.` : `${title}. Honest results.`,
+      caption: isHeat ? `${titleCase(topic)} outdoor heat test. Honest results.` : `${title}. Honest results.`,
       cta: "Subscribe for the next test",
       onScreenText: ["The question", "The numbers", "Verdict"],
       pacing: "Slightly more explanatory; Shorts viewers tolerate a clearer setup.",

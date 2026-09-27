@@ -9,6 +9,17 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary WhiteSpace service and Oriane configuration status
+ */
+export const GetWhiteSpaceHealthResponse = zod.object({
+  "status": zod.string(),
+  "orianeConfigured": zod.boolean(),
+  "cachedResponses": zod.number().int(),
+  "mode": zod.string()
+})
+
+
+/**
  * @summary Analyze a market, brand, or audience
  */
 

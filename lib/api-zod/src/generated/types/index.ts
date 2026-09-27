@@ -11,4 +11,5 @@ export * from './analyzeMarketParams';
 export * from './apiError';
 export * from './getOpportunity200';
 export * from './getOpportunityParams';
+export * from './getWhiteSpaceHealth200';
 export * from './healthStatus';

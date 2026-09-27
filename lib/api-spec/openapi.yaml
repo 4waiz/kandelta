@@ -13,6 +13,28 @@ tags:
   - name: analysis
     description: Video market analysis
 paths:
+  /health:
+    get:
+      operationId: getWhiteSpaceHealth
+      tags: [health]
+      summary: WhiteSpace service and Oriane configuration status
+      responses:
+        "200":
+          description: Status without credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  orianeConfigured:
+                    type: boolean
+                  cachedResponses:
+                    type: integer
+                  mode:
+                    type: string
+                required: [status, orianeConfigured, cachedResponses, mode]
   /analyze:
     get:
       operationId: analyzeMarket

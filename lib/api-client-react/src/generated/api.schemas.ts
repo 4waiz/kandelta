@@ -13,6 +13,13 @@ export interface HealthStatus {
   status: string;
 }
 
+export type GetWhiteSpaceHealth200 = {
+  status: string;
+  orianeConfigured: boolean;
+  cachedResponses: number;
+  mode: string;
+};
+
 export type AnalyzeMarketParams = {
 /**
  * @minLength 1

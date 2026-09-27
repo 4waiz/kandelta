@@ -120,7 +120,7 @@ export async function measure(ctx: Ctx, extra: ContentQuery[], filters: ContentF
 }
 
 async function recentCount(ctx: Ctx, extra: ContentQuery[], filters: ContentFilters = {}): Promise<number> {
-  const r = await ctx.run(() => searchContents({ limit: 1, offset: 0, projection: "basic" }, buildBody(ctx, extra, filters, recentWindow(30))));
+  const r = await ctx.run(() => searchContents({ limit: 1, offset: 0, projection: "basic" }, buildBody(ctx, extra, filters, recentWindow(30, new Date(ctx.market.window.before + "T00:00:00Z")))));
   ctx.sources[r.source]++;
   return r.response.metadata.pagination?.totalCount ?? 0;
 }
@@ -188,7 +188,7 @@ export async function resolveMarket(input: string): Promise<MarketContext> {
   let baseline = await measure(ctx, []);
   let note: string | null = null;
   if (market.location && baseline.n < MIN_MARKET_N) {
-    note = `Only ${baseline.n.toLocaleString("en-US")} ${market.label} videos mention ${market.location.label} in the last 3 months, which is too few for reliable splits. WhiteSpace measured the global ${market.label} market and uses heat as the local lens.`;
+    note = `Only ${baseline.n.toLocaleString("en-US")} videos in this text-matched ${market.label} slice also mention ${market.location.label} during the measured window. That is too few for reliable splits, so the following analysis uses a global market baseline. Visual heat matches are not proof of local relevance.`;
     ctx.useLocation = false;
     baseline = await measure(ctx, []);
   }
