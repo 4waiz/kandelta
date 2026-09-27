@@ -58,9 +58,10 @@ export function AudienceLab({ initialScript, ctx }: { initialScript: string; ctx
   return (
     <div className="rounded-xl border border-line bg-panel">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line-soft px-5 py-3">
-        <div className="flex items-center gap-2 text-xs text-muted">
-          <FlaskConical size={14} className="text-faint" />
-          Simulated audience panel. Directional feedback, not real market research.
+        <div className="flex items-center gap-2 text-xs">
+          <FlaskConical size={14} className="text-warn" />
+          <span className="font-semibold uppercase tracking-wider text-warn">AI-simulated audience panel</span>
+          <span className="text-muted">Directional feedback, not real consumer research.</span>
         </div>
         <Chip>6 rule-based personas · grounded in {ctx.evidenceCount} Oriane evidence videos</Chip>
       </div>
@@ -100,7 +101,7 @@ export function AudienceLab({ initialScript, ctx }: { initialScript: string; ctx
               </ul>
               {previous ? (
                 <div className="mt-3 rounded-md border border-accent/25 bg-accent/5 px-3 py-2 text-xs text-accent">
-                  After the change: {keep(previous)}/6 → {keep(result)}/6 personas keep watching.
+                  After the change: {keep(previous)}/6 → {keep(result)}/6 simulated personas keep watching.
                 </div>
               ) : null}
             </div>

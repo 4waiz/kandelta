@@ -31,7 +31,7 @@ export function Nav() {
   );
   return (
     <header className="sticky top-0 z-30 border-b border-line-soft bg-bg/80 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-6">
           <Link href="/" aria-label="WhiteSpace home">
             <Logo />

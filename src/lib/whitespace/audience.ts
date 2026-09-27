@@ -290,7 +290,7 @@ export function runPanel(script: string, ctx: LabContext): LabResult {
   const n = reactions.length;
   const positive = reactions.filter((r) => r.verdict === "Keeps watching").length;
   const consensus: string[] = [];
-  consensus.push(`${positive}/${n} personas would keep watching.`);
+  consensus.push(`${positive}/${n} simulated personas would keep watching.`);
   if (count("late-stakes").length) consensus.push(`${count("late-stakes").length}/${n} found the opening slow to state the challenge.`);
   if (f.proof) consensus.push(`${reactions.filter((r) => r.because.some((b) => b.startsWith("Draft includes a proof beat"))).length}/${n} responded to the proof beat.`);
   if (count("jargon").length) consensus.push(`${count("jargon").length}/${n} were confused by technical terms.`);

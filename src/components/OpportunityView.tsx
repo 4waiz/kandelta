@@ -125,6 +125,8 @@ export function OpportunityView() {
   const visualGap = data.crowdGaps.find((g) => g.id === "visual");
   const otherGaps = data.crowdGaps.filter((g) => g.id !== "visual" && g.isGap);
   const missed = data.captionOverlap ? o.stats.n - data.captionOverlap.n : null;
+  const topWatched = data.evidence.slice().sort((a, b) => b.views - a.views).slice(0, 3);
+  const topWatchedPaid = topWatched.filter((v) => v.sponsored || v.likelyBoosted);
   const from = { query: data.query, opportunity: data.brief.title };
 
   const whyVideo = (v: (typeof data.evidence)[number]) => {
@@ -173,9 +175,19 @@ export function OpportunityView() {
         <div className="mt-6 rounded-xl border border-accent/25 bg-accent/[0.04] p-5">
           <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">Why this matters</div>
           <p className="mt-2 text-lg leading-relaxed">
-            Only <span className="font-semibold">{fmtInt(o.stats.n)}</span> of {fmtInt(data.market.n)} {data.market.universe} videos ({fmtPct(o.supplyShare)}) {o.kind === "visual" ? "show this" : "use this angle"}, yet they earn{" "}
+            Across the {fmtInt(data.market.n)} {data.market.universe} videos Oriane indexed in the last 3 months, only{" "}
+            <span className="font-semibold">{fmtInt(o.stats.n)}</span> ({fmtPct(o.supplyShare)}) {o.kind === "visual" ? "show this" : "use this angle"}. Those videos earn{" "}
             <span className="font-semibold text-accent">{fmtX(o.engagementIndex)} the engagement per view</span> and {fmtX(o.reachIndex)} the views per follower of the average{" "}
-            {data.market.universe} video. Audiences respond. Few creators are making it.
+            {data.market.universe} video.
+          </p>
+          <p className="mt-2 text-sm text-muted">
+            <span className="font-medium text-fg">Why now:</span> {o.stage} stage
+            {o.momentum !== null
+              ? o.momentum < 1
+                ? `, and new supply is slowing (last 30 days at ${fmtX(o.momentum)} the market's pace), so the space is not filling up.`
+                : `, but new supply is arriving at ${fmtX(o.momentum)} the market's pace over the last 30 days, so the window is closing.`
+              : "."}{" "}
+            Observed relationship, not a guarantee.
           </p>
           {missed !== null && data.captionOverlap ? (
             <p className="mt-3 flex items-start gap-2 text-sm text-muted">
@@ -186,12 +198,12 @@ export function OpportunityView() {
               </span>
             </p>
           ) : null}
-          {paid.length >= 2 ? (
+          {topWatchedPaid.length >= 2 ? (
             <p className="mt-2 flex items-start gap-2 text-sm text-muted">
               <ShieldCheck size={15} className="mt-0.5 shrink-0 text-warn" />
               <span>
-                {paid.length} of the most-watched examples are brand ads or boosted posts ({[...new Set(paid.flatMap((v) => v.mentions).filter(Boolean))].slice(0, 3).map((m) => "@" + m).join(", ") || "paid partnerships"}).
-                Brands already pay to distribute this look; organic creators barely make it.
+                {topWatchedPaid.length === topWatched.length ? `All ${topWatched.length}` : `${topWatchedPaid.length} of the ${topWatched.length}`} most-watched videos with this look are disclosed ads or likely-boosted
+                brand posts ({topWatchedPaid.map((v) => "@" + v.creator.handle).join(", ")}). Brands already pay to put this look in front of people, while organic creator supply stays small.
               </span>
             </p>
           ) : null}

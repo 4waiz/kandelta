@@ -25,21 +25,46 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
     const xMin = Math.min(Math.log10(SPLIT_SHARE) - 0.6, Math.min(...xs) - 0.15);
     const xMax = Math.max(Math.log10(SPLIT_SHARE) + 0.6, Math.max(...xs) + 0.15);
     const yMin = Math.min(-0.7, Math.min(...ys) - 0.12);
-    const yMax = Math.max(0.7, Math.max(...ys) + 0.12);
+    const yMax = Math.max(0.7, Math.max(...ys) + 0.3);
     const sx = (v: number) => M.l + ((v - xMin) / (xMax - xMin)) * (W - M.l - M.r);
     const sy = (v: number) => H - M.b - ((v - yMin) / (yMax - yMin)) * (H - M.t - M.b);
     const maxN = Math.max(...items.map((o) => o.stats.n));
     const pts = items.map((o, i) => ({ o, x: sx(xs[i]), y: sy(ys[i]), r: 5 + 13 * Math.sqrt(o.stats.n / maxN) }));
 
-    // Labels: best-scoring first, greedy collision avoidance.
-    const placed: { x: number; y: number; w: number; h: number }[] = [];
-    const labels: { id: string; x: number; y: number; text: string; anchor: "start" | "end" }[] = [];
+    // Where the crowd is: bounding box of angles holding ≥ 1% of supply.
+    const crowdPts = pts.filter((p) => p.o.supplyShare >= SPLIT_SHARE);
+    const crowd =
+      crowdPts.length >= 3
+        ? {
+            x: Math.min(...crowdPts.map((p) => p.x - p.r)) - 10,
+            y: Math.min(...crowdPts.map((p) => p.y - p.r)) - 10,
+            x2: Math.max(...crowdPts.map((p) => p.x + p.r)) + 10,
+            y2: Math.max(...crowdPts.map((p) => p.y + p.r)) + 10,
+            n: crowdPts.length,
+          }
+        : null;
+
+    // The gap: best-scoring white-space angle gets a two-line callout.
     const order = pts.slice().sort((a, b) => b.o.score - a.o.score);
+    const gap = order.find((p) => p.o.quadrant === "white-space") ?? null;
+
+    // Labels: best-scoring first, greedy collision avoidance against labels and bubbles.
+    const placed: { x: number; y: number; w: number; h: number }[] = [];
+    if (crowd) placed.push({ x: crowd.x, y: crowd.y - 16, w: 150, h: 14 });
+    const labels: { id: string; x: number; y: number; text: string; anchor: "start" | "end" }[] = [];
+    let gapLabel: { x: number; y: number; anchor: "start" | "end" } | null = null;
+    if (gap) {
+      const w = 190;
+      const right = gap.x + gap.r + 10 + w < W - M.r;
+      const bx = right ? gap.x + gap.r + 10 : gap.x - gap.r - 10 - w;
+      placed.push({ x: bx, y: gap.y - 14, w, h: 30 });
+      gapLabel = { x: right ? bx : bx + w, y: gap.y - 2, anchor: right ? "start" : "end" };
+    }
     const coversBubble = (bx: number, by: number, w: number, self: (typeof pts)[number]) =>
       pts.some((q) => q !== self && q.x + q.r > bx && q.x - q.r < bx + w && q.y + q.r > by && q.y - q.r < by + 12);
-    for (const p of order.slice(0, 9)) {
+    for (const p of order.filter((p) => p !== gap).slice(0, 8)) {
       const text = p.o.name;
-      const w = text.length * 6.4 + 6;
+      const w = text.length * 7 + 6;
       const sides = p.x + p.r + 6 + w < W - M.r ? [true, false] : [false, true];
       let done = false;
       for (const right of sides) {
@@ -61,10 +86,10 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
 
     const xTicks = [0.001, 0.003, 0.01, 0.03, 0.1].filter((t) => Math.log10(t) >= xMin && Math.log10(t) <= xMax);
     const yTicks = [0.5, 0.75, 1, 1.5, 2].filter((t) => Math.log2(t) >= yMin && Math.log2(t) <= yMax);
-    return { sx, sy, pts, labels, xTicks, yTicks, xMin, xMax, yMin, yMax };
+    return { sx, sy, pts, labels, xTicks, yTicks, xMin, xMax, yMin, yMax, crowd, gap, gapLabel };
   }, [items]);
 
-  const { sx, sy, pts, labels, xTicks, yTicks, yMax } = geo;
+  const { sx, sy, pts, labels, xTicks, yTicks, yMax, crowd, gap, gapLabel } = geo;
   const splitX = sx(Math.log10(SPLIT_SHARE));
   const splitY = sy(0);
 
@@ -77,7 +102,7 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
         {xTicks.map((t) => (
           <g key={t}>
             <line x1={sx(Math.log10(t))} x2={sx(Math.log10(t))} y1={M.t} y2={H - M.b} stroke="var(--line-soft)" />
-            <text x={sx(Math.log10(t))} y={H - M.b + 16} textAnchor="middle" className="fill-[var(--faint)] text-[10px]">
+            <text x={sx(Math.log10(t))} y={H - M.b + 16} textAnchor="middle" className="fill-[var(--faint)] text-[11px]">
               {fmtPct(t, t < 0.01 ? 1 : 0)}
             </text>
           </g>
@@ -85,7 +110,7 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
         {yTicks.map((t) => (
           <g key={t}>
             <line x1={M.l} x2={W - M.r} y1={sy(Math.log2(t))} y2={sy(Math.log2(t))} stroke="var(--line-soft)" />
-            <text x={M.l - 8} y={sy(Math.log2(t)) + 3} textAnchor="end" className="fill-[var(--faint)] text-[10px]">
+            <text x={M.l - 8} y={sy(Math.log2(t)) + 3} textAnchor="end" className="fill-[var(--faint)] text-[11px]">
               {t}×
             </text>
           </g>
@@ -94,19 +119,19 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
         <line x1={splitX} x2={splitX} y1={M.t} y2={H - M.b} stroke="var(--line)" strokeDasharray="3 4" />
         <line x1={M.l} x2={W - M.r} y1={splitY} y2={splitY} stroke="var(--line)" strokeDasharray="3 4" />
         {/* quadrant labels */}
-        <text x={M.l + 10} y={sy(yMax) + 18} className="fill-[var(--accent)] text-[11px] font-semibold tracking-[0.12em]">
+        <text x={M.l + 10} y={sy(yMax) + 18} className="fill-[var(--accent)] text-[12px] font-semibold tracking-[0.12em]">
           WHITE SPACE
         </text>
-        <text x={M.l + 10} y={sy(yMax) + 32} className="fill-[var(--faint)] text-[10px]">
+        <text x={M.l + 10} y={sy(yMax) + 32} className="fill-[var(--faint)] text-[11px]">
           audiences respond · few creators
         </text>
-        <text x={W - M.r - 10} y={sy(yMax) + 18} textAnchor="end" className="fill-[var(--muted)] text-[11px] font-semibold tracking-[0.12em]">
+        <text x={W - M.r - 10} y={sy(yMax) + 18} textAnchor="end" className="fill-[var(--muted)] text-[12px] font-semibold tracking-[0.12em]">
           SATURATED WINNERS
         </text>
-        <text x={W - M.r - 10} y={H - M.b - 10} textAnchor="end" className="fill-[var(--faint)] text-[11px] font-semibold tracking-[0.12em]">
+        <text x={W - M.r - 10} y={H - M.b - 10} textAnchor="end" className="fill-[var(--faint)] text-[12px] font-semibold tracking-[0.12em]">
           CONTENT NOISE
         </text>
-        <text x={M.l + 10} y={H - M.b - 10} className="fill-[var(--faint)] text-[11px] font-semibold tracking-[0.12em]">
+        <text x={M.l + 10} y={H - M.b - 10} className="fill-[var(--faint)] text-[12px] font-semibold tracking-[0.12em]">
           LOW SIGNAL
         </text>
         {/* axes titles */}
@@ -116,6 +141,15 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
         <text transform={`translate(14 ${(M.t + H - M.b) / 2}) rotate(-90)`} textAnchor="middle" className="fill-[var(--muted)] text-[11px]">
           Audience response vs average →
         </text>
+        {/* where the crowd is */}
+        {crowd ? (
+          <g className="pointer-events-none">
+            <rect x={crowd.x} y={crowd.y} width={crowd.x2 - crowd.x} height={crowd.y2 - crowd.y} rx={14} fill="none" stroke="var(--faint)" strokeOpacity={0.45} strokeDasharray="4 5" />
+            <text x={crowd.x + 4} y={crowd.y - 6} className="fill-[var(--muted)] text-[11px]">
+              Where most creators are · {crowd.n} crowded angles
+            </text>
+          </g>
+        ) : null}
         {/* bubbles */}
         {pts
           .slice()
@@ -141,10 +175,20 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
               </g>
             );
           })}
+        {gap && gapLabel ? (
+          <g className="pointer-events-none">
+            <text x={gapLabel.x} y={gapLabel.y} textAnchor={gapLabel.anchor} className="fill-[var(--accent)] text-[14px] font-semibold">
+              The gap: {gap.o.name}
+            </text>
+            <text x={gapLabel.x} y={gapLabel.y + 15} textAnchor={gapLabel.anchor} className="fill-[var(--muted)] text-[11px]">
+              {fmtPct(gap.o.supplyShare)} of supply · {fmtX(gap.o.relativePerformance)} response · {fmtInt(gap.o.stats.n)} videos
+            </text>
+          </g>
+        ) : null}
         {labels.map((l) => {
           const o = items.find((i) => i.id === l.id)!;
           return (
-            <text key={l.id} x={l.x} y={l.y} textAnchor={l.anchor} className={`pointer-events-none text-[11px] ${o.quadrant === "white-space" ? "fill-[var(--fg)] font-medium" : "fill-[var(--muted)]"}`}>
+            <text key={l.id} x={l.x} y={l.y} textAnchor={l.anchor} className={`pointer-events-none text-[12px] ${o.quadrant === "white-space" ? "fill-[var(--fg)] font-medium" : "fill-[var(--muted)]"}`}>
               {l.text}
             </text>
           );
