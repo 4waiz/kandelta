@@ -12,8 +12,11 @@ import type { ContentQuery, DataSource, RawSearchResponse, SearchParams } from "
 //   WHITESPACE_DATA_MODE=fixture never calls the API (demo/dev on saved real responses).
 
 const BASE = "https://connect.oriane.xyz";
-const CACHE_DIR = path.join(process.cwd(), "data", "oriane-cache");
-const ASSETS_FILE = path.join(process.cwd(), "data", "oriane-assets.json");
+
+// Tests use an isolated copy of the genuine snapshots, never the production cache.
+const DATA_DIR = process.env.WHITESPACE_DATA_DIR ?? path.join(process.cwd(), "data");
+const CACHE_DIR = path.join(DATA_DIR, "oriane-cache");
+const ASSETS_FILE = path.join(DATA_DIR, "oriane-assets.json");
 const CACHE_TTL_MS = Number(process.env.WHITESPACE_CACHE_TTL_HOURS ?? 24) * 3600_000;
 const FIXTURE_ONLY = process.env.WHITESPACE_DATA_MODE === "fixture";
 

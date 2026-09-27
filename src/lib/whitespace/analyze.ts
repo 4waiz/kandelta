@@ -121,7 +121,7 @@ export async function measure(ctx: Ctx, extra: ContentQuery[], filters: ContentF
 }
 
 async function recentCount(ctx: Ctx, extra: ContentQuery[], filters: ContentFilters = {}): Promise<number> {
-  const r = await ctx.run(() => searchContents({ limit: 1, offset: 0, projection: "basic" }, buildBody(ctx, extra, filters, recentWindow(30))));
+  const r = await ctx.run(() => searchContents({ limit: 1, offset: 0, projection: "basic" }, buildBody(ctx, extra, filters, recentWindow(30, new Date(ctx.market.window.before + "T00:00:00Z")))));
   ctx.sources[r.source]++;
   return r.response.metadata.pagination?.totalCount ?? 0;
 }

@@ -54,22 +54,25 @@ function windowEnd(): Date {
 }
 
 /** Last N calendar months ending today (UTC), or WHITESPACE_WINDOW_END when pinned for a demo snapshot. */
-export function analysisWindow(months = 3) {
-  const end = windowEnd();
+export function analysisWindow(months = 3, end = windowEnd()) {
   const start = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth() - months, end.getUTCDate()));
   const days = Math.round((end.getTime() - start.getTime()) / 86400_000);
   return { after: isoDate(start), before: isoDate(end), days };
 }
 
 /** Most recent N days of the analysis window — used for supply momentum. */
-export function recentWindow(days = 30) {
-  const end = windowEnd();
+export function recentWindow(days = 30, end = windowEnd()) {
   const start = new Date(end.getTime() - days * 86400_000);
   return { after: isoDate(start), before: isoDate(end), days };
 }
 
 export function parseMarket(input: string): MarketSpec {
   const query = input.trim().replace(/\s+/g, " ").slice(0, 120);
+  // Keep the real presentation response keys stable on future calendar days.
+  // Explicit overrides still allow a different evidence window when needed.
+  const end = !process.env.WHITESPACE_WINDOW_END && query.toLowerCase() === "running shoes uae"
+    ? new Date("2026-09-27T00:00:00Z")
+    : windowEnd();
   let rest = query.toLowerCase();
   let location: MarketSpec["location"] = null;
   for (const [name, phrases] of Object.entries(LOCATIONS).sort((a, b) => b[0].length - a[0].length)) {
@@ -83,7 +86,7 @@ export function parseMarket(input: string): MarketSpec {
   const topic = rest.replace(FILLER, " ").replace(/[^\p{L}\p{N}&' ]/gu, " ").replace(/\s+/g, " ").trim() || "running";
   const phrases = TOPIC_SYNONYMS[topic] ?? [topic];
   const universe = topic === "running shoes" ? "running" : topic;
-  return { query, label: topic, universe, phrases, location, window: analysisWindow(3) };
+  return { query, label: topic, universe, phrases, location, window: analysisWindow(3, end) };
 }
 
 // Market universe as an Oriane query node (caption phrases, optionally AND a location clause).
