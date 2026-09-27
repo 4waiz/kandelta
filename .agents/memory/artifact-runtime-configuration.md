@@ -7,7 +7,9 @@ Keep workspace-level deployment settings out of an artifact's service manifest, 
 
 **Why:** The manifest validator rejected a deployment section without identifying its specific invalid key, while accepting the original manifest and changes limited to service commands.
 
-**How to apply:** When routing a root-level application through a managed artifact, remember the managed service starts in the artifact directory. Make service commands explicitly target the repository root, then validate the manifest through the artifact validation flow and restart the managed workflow.
+**How to apply:** When routing a root-level application through a managed artifact, account for development commands starting in the artifact directory and deployment build commands starting at the repository root. Production commands should resolve the root from either starting location; validate the manifest and restart the managed workflow after changes.
+
+**Why:** A command that unconditionally changed two directories upward worked in Preview but failed to find the root lockfile during publication because the deployment command was already at the repository root.
 
 Publishing can build every registered artifact service, including a legacy API service no longer used by the canonical app. Remove an obsolete artifact from the project after confirming the canonical app owns those routes.
 

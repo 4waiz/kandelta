@@ -17,10 +17,10 @@ run = "npm --prefix ../.. run start -- -H 0.0.0.0 -p ${PORT:-18253}"
 [services.production]
 
 [services.production.build]
-args = [ "sh", "-c", "cd ../.. && npm ci && npm run build" ]
+args = [ "sh", "-c", "if [ ! -f package-lock.json ]; then cd ../..; fi; npm ci && npm run build" ]
 
 [services.production.run]
-args = [ "sh", "-c", "cd ../.. && npm run start -- -H 0.0.0.0 -p ${PORT:-18253}" ]
+args = [ "sh", "-c", "if [ ! -f package-lock.json ]; then cd ../..; fi; npm run start -- -H 0.0.0.0 -p ${PORT:-18253}" ]
 
 [services.env]
 PORT = "18253"
