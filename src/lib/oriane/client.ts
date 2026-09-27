@@ -12,8 +12,11 @@ import type { ContentQuery, DataSource, RawSearchResponse, SearchParams } from "
 //   WHITESPACE_DATA_MODE=fixture never calls the API (demo/dev on saved real responses).
 
 const BASE = "https://connect.oriane.xyz";
-const CACHE_DIR = path.join(process.cwd(), "data", "oriane-cache");
-const ASSETS_FILE = path.join(process.cwd(), "data", "oriane-assets.json");
+
+// Tests use an isolated copy of the genuine snapshots, never the production cache.
+const DATA_DIR = process.env.WHITESPACE_DATA_DIR ?? path.join(process.cwd(), "data");
+const CACHE_DIR = path.join(DATA_DIR, "oriane-cache");
+const ASSETS_FILE = path.join(DATA_DIR, "oriane-assets.json");
 const CACHE_TTL_MS = Number(process.env.WHITESPACE_CACHE_TTL_HOURS ?? 24) * 3600_000;
 const FIXTURE_ONLY = process.env.WHITESPACE_DATA_MODE === "fixture";
 
@@ -60,6 +63,7 @@ interface CacheEntry {
 
 const memory = new Map<string, CacheEntry>();
 let liveCalls = 0;
+let lastStaleWarning = 0;
 export const liveCallCount = () => liveCalls;
 
 function readDisk(key: string): CacheEntry | null {
@@ -96,6 +100,8 @@ export interface SearchResult {
   fetchedAt: string;
 }
 
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
 export async function searchContents(params: SearchParams, body: ContentQuery): Promise<SearchResult> {
   const p = "/rest/contents/search";
   const query: Record<string, string | number> = {
@@ -109,6 +115,7 @@ export async function searchContents(params: SearchParams, body: ContentQuery): 
   const mem = memory.get(key);
   if (mem && Date.now() - Date.parse(mem.fetchedAt) < CACHE_TTL_MS) return { ...mem, source: "cache" };
   const disk = readDisk(key);
+  const fallback = disk ?? mem;
   if (disk && (FIXTURE_ONLY || Date.now() - Date.parse(disk.fetchedAt) < CACHE_TTL_MS)) {
     memory.set(key, disk);
     return { ...disk, source: "cache" };
@@ -117,25 +124,50 @@ export async function searchContents(params: SearchParams, body: ContentQuery): 
 
   try {
     const qs = new URLSearchParams(Object.entries(query).map(([k, v]) => [k, String(v)])).toString();
-    const res = await fetch(`${BASE}${p}?${qs}`, {
-      method: "POST",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${apiKey()}` },
-      body: JSON.stringify(body),
-      cache: "no-store",
-      signal: AbortSignal.timeout(25_000),
-    });
-    liveCalls++;
-    const json = await res.json().catch(() => null);
-    if (!res.ok || !json?.data) {
-      const code = json?.error?.code ?? res.status;
-      throw new OrianeUnavailableError(`Oriane search failed (${code}).`, res.status);
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const res = await fetch(`${BASE}${p}?${qs}`, {
+          method: "POST",
+          headers: { "content-type": "application/json", Authorization: `Bearer ${apiKey()}` },
+          body: JSON.stringify(body),
+          cache: "no-store",
+          signal: AbortSignal.timeout(25_000),
+        });
+        liveCalls++;
+        const json = await res.json().catch(() => null);
+        if (res.ok && json?.data) {
+          const entry: CacheEntry = { response: json as RawSearchResponse, fetchedAt: new Date().toISOString() };
+          memory.set(key, entry);
+          writeDisk(key, { path: p, query, body }, entry);
+          return { ...entry, source: "live" };
+        }
+        if (attempt < 3 && !fallback && (res.status === 429 || res.status >= 500)) {
+          const seconds = Number(res.headers.get("retry-after"));
+          await wait(Number.isFinite(seconds) && seconds > 0 ? Math.min(seconds * 1000, 4000) : attempt * 600);
+          continue;
+        }
+        throw new OrianeUnavailableError(`Oriane search failed (${json?.error?.code ?? res.status}).`, res.status);
+      } catch (err) {
+        if (err instanceof OrianeUnavailableError || fallback || attempt === 3) throw err;
+        await wait(attempt * 600);
+      }
     }
-    const entry: CacheEntry = { response: json as RawSearchResponse, fetchedAt: new Date().toISOString() };
-    memory.set(key, entry);
-    writeDisk(key, { path: p, query, body }, entry);
-    return { ...entry, source: "live" };
+    throw new OrianeUnavailableError("Oriane search exhausted retries.");
   } catch (err) {
-    const fallback = disk ?? mem;
+    const reason =
+      err instanceof OrianeUnavailableError
+        ? err.status ? "upstream-http" : "server-configuration"
+        : err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")
+          ? "timeout"
+          : "network";
+    if (!fallback || Date.now() - lastStaleWarning > 30_000) {
+      console.error("[Oriane] search unavailable", {
+        status: err instanceof OrianeUnavailableError ? err.status ?? null : null,
+        reason,
+        staleCacheAvailable: !!fallback,
+      });
+      if (fallback) lastStaleWarning = Date.now();
+    }
     if (fallback) return { ...fallback, source: "stale-cache" };
     if (err instanceof OrianeUnavailableError) throw err;
     throw new OrianeUnavailableError("Video intelligence temporarily unavailable.");

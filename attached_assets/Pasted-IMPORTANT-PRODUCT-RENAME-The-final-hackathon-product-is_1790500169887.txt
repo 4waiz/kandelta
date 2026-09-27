@@ -1,0 +1,256 @@
+IMPORTANT PRODUCT RENAME.
+
+The final hackathon product is now:
+
+KANDELTA
+
+by Team Kanban
+
+OLD NAME:
+WhiteSpace
+
+NEW GITHUB REPOSITORY:
+https://github.com/4waiz/kandelta
+
+The product logic is unchanged.
+
+DO NOT rebuild the application.
+
+DO NOT create a competing implementation.
+
+Your responsibility remains:
+
+REPLIT INTEGRATION + DEPLOYMENT.
+
+========================================================
+NEW BRAND
+========================================================
+
+Product:
+
+KanDelta
+
+Tagline:
+
+"Find the delta before the market does."
+
+Supporting line:
+
+"Opportunity intelligence for the video internet."
+
+Meaning:
+
+KAN
+= Team Kanban
+
+DELTA
+= the gap/divergence between audience response and creator supply.
+
+========================================================
+FIRST — UPDATE GIT REMOTE
+========================================================
+
+Inspect:
+
+git remote -v
+
+The GitHub repo has been renamed from:
+
+4waiz/whitespace
+
+to:
+
+4waiz/kandelta
+
+Set origin if necessary:
+
+git remote set-url origin https://github.com/4waiz/kandelta.git
+
+Then:
+
+git fetch origin
+
+Do NOT rewrite history.
+Do NOT force push.
+Do NOT merge into main.
+
+========================================================
+SYNC THE LATEST CLAUDE PRODUCT
+========================================================
+
+The canonical application remains Claude's tested implementation.
+
+Fetch the latest:
+
+origin/claude-track
+
+If Claude has pushed a new branding commit, merge that into:
+
+replit-track
+
+Preserve Replit-specific deployment configuration.
+
+Prefer claude-track for all product/UI/application files.
+
+Prefer Replit only for:
+
+.replit
+runtime configuration
+deployment configuration
+port binding
+
+========================================================
+IMPORTANT INTERNAL-NAME RULE
+========================================================
+
+Do NOT rename internal environment variables just for branding.
+
+KEEP:
+
+WHITESPACE_WINDOW_END
+WHITESPACE_CACHE_TTL_HOURS
+
+They are existing implementation details and are already configured.
+
+KEEP:
+
+ORIANE_API_KEY
+
+Do not expose it.
+
+Internal folders/routes containing "whitespace" may remain if changing them risks the demo.
+
+Only USER-FACING branding must become KanDelta.
+
+========================================================
+REPLIT CONFIG
+========================================================
+
+Current configuration should remain:
+
+WHITESPACE_WINDOW_END=2026-09-27
+WHITESPACE_CACHE_TTL_HOURS=168
+
+ORIANE_API_KEY remains in Secrets.
+
+SESSION_SECRET can remain.
+
+========================================================
+VISIBLE BRANDING
+========================================================
+
+Confirm the deployed application says:
+
+KanDelta
+
+NOT:
+
+WhiteSpace
+
+Check:
+
+landing page
+nav
+browser title
+Present mode
+Delta Map
+Opportunity page
+Audience Lab
+Campaign Brief
+Evidence Vault
+footer
+
+Preferred landing page:
+
+KanDelta
+
+"Find the delta before the market does."
+
+"KanDelta analyzes the video internet to uncover places where audience response and creator supply diverge before the opportunity becomes crowded."
+
+CTA:
+
+Find the Delta
+
+Footer:
+
+Powered by Oriane
+Built on Replit
+Team Kanban
+
+Keep Team Kanban subtle.
+
+========================================================
+DO NOT CHANGE THE REAL DEMO
+========================================================
+
+Keep the proven demo:
+
+Running shoes UAE
+
+The real Oriane findings and methodology must remain unchanged.
+
+Do not modify scores/metrics because of the rename.
+
+========================================================
+FINAL REPLIT CHECK
+========================================================
+
+Run:
+
+npm install
+npm run lint
+npm run build
+
+and typecheck if configured.
+
+Start production using:
+
+0.0.0.0
+$PORT
+
+Run the complete Presentation Mode.
+
+Confirm:
+
+- KanDelta branding
+- Delta Map works
+- Desert Heat works
+- real Oriane evidence works
+- Crowd Gap works
+- Hidden Conversation works
+- Creative DNA works
+- Audience Lab works
+- Apply works
+- Creator Fit works
+- Campaign Brief works
+- platform adaptations work
+- no 500 errors
+- no console errors
+- no direct client call to Oriane
+- cached demo remains fast
+
+========================================================
+PUBLISH
+========================================================
+
+When everything works:
+
+Publish KanDelta through Replit.
+
+Then test the PUBLIC deployed URL in a fresh browser.
+
+Report only:
+
+1. public URL
+2. branch
+3. commit
+4. build status
+5. presentation test status
+6. any remaining visible "WhiteSpace" branding
+
+Do not create new features.
+
+Deployment and branding only.
+
+Execute now.

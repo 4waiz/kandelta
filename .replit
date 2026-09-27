@@ -1,0 +1,30 @@
+modules = ["nodejs-24"]
+run = "npm run start -- -H 0.0.0.0 -p $PORT"
+
+[deployment]
+deploymentTarget = "autoscale"
+
+[workflows]
+runButton = "Project"
+
+[agent]
+stack = "PNPM_WORKSPACE"
+expertMode = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 120000
+
+[userenv]
+
+[userenv.shared]
+WHITESPACE_WINDOW_END = "2026-09-27"
+WHITESPACE_CACHE_TTL_HOURS = "168"
+
+[[ports]]
+localPort = 21265
+externalPort = 80
+
+[[ports]]
+localPort = 21301
+externalPort = 3000

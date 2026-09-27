@@ -52,7 +52,7 @@ const SPONSORED = /(#ads?\b|^\s*ad\s*[|:]|\[ad\]|\(ad\)|\bsponsored\b|paid partn
 
 // Brand-safety screen for what we DISPLAY (population stats are untouched).
 const UNSAFE = /\b(idf|gaza|israel\w*|palestin\w*|hamas|soldiers?|army|military|war|bomb\w*|killed|shooting|terror\w*|nude|naked|porn\w*|onlyfans|nsfw)\b/i;
-const PROFANE = /\b(fuck\w*|shit\w*|bitch\w*|dick|pussy|cunt|nigg\w*)\b/i;
+const PROFANE = /\b(fuck\w*|shit\w*|bitch\w*|dick|pussy|cunt|nigg\w*|gilipoll\w*|puta|mierda|joder|cabr[oó]n|co[nñ]o|scheiß\w*|scheiss\w*|merde|putain|cazzo|caralho|porra)\b/i;
 
 export function postUrl(r: RawContent): string | null {
   if (!r.platformId) return null;
@@ -96,7 +96,7 @@ export function normalizeVideo(r: RawContent): Video {
     hashtags: (r.hashtags ?? []).map((h) => h.toLowerCase()),
     transcript: r.transcript ?? null,
     transcriptLanguage: r.transcriptLanguage ?? null,
-    hook: hookChunks.length ? hookChunks.map((c) => c.text).join(" ").trim() : null,
+    hook: hookChunks.length && !PROFANE.test(hookChunks.map((c) => c.text).join(" ")) ? hookChunks.map((c) => c.text).join(" ").trim() : null,
     firstSpeechAt: chunks.length ? chunks[0].startSeconds : null,
     wordsPerSecond: r.duration && r.transcript ? words / r.duration : null,
     frames: (r.frames ?? [])

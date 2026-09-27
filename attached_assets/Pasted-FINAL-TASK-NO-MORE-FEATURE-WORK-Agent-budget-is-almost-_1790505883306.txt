@@ -1,0 +1,182 @@
+FINAL TASK. NO MORE FEATURE WORK.
+
+Agent budget is almost exhausted.
+
+Finish ONLY the work already in progress, plus these four correctness fixes from the release review.
+
+DO NOT start anything else.
+
+1. Finish the navigation issue after visiting Evidence Vault.
+2. Finish the mobile horizontal overflow fix.
+3. Keep the new KanDelta logo and Crowd Gap visual redesign.
+4. Apply ONLY these four credibility fixes:
+
+A. 12 OF 119 WORDING
+
+Use:
+
+"Of the posts matching this visual, only 12 also mention heat, hot weather or humidity in caption or speech."
+
+Do NOT say:
+"not an intersection count"
+
+because it is derived from the same visual filter plus those text/speech terms.
+
+B. SOUND CARD
+
+The current card says original audio is both most common and best responding, but the data shows:
+
+Original audio: 0.99x
+Licensed/trending music: 1.03x
+
+Since that difference is below our gap threshold, change the verdict to something like:
+
+"No meaningful sound gap detected."
+
+Keep:
+Original audio 78%
+0.99x response
+
+and show licensed music 1.03x if useful.
+
+Do not claim original audio performs best.
+
+C. BRAND COVERAGE
+
+Do NOT say:
+"Brands are ignoring this"
+or
+"No brand is here."
+
+Use:
+
+"No single brand owns this space."
+
+Keep the observed numbers honestly.
+
+D. PRESENTATION MODE NOTES
+
+Update the presenter notes so they match the actual screen:
+
+- do NOT say Oriane watched "every running video"
+- say:
+  "Across 48,197 running videos Oriane indexed in the last three months."
+
+- Step on text detection:
+  "Of the visual matches, only 12 also mention heat, hot weather or humidity."
+
+- Ads:
+  say:
+  "Two of the three most-watched qualified examples are ads or boosted brand posts."
+
+- Creative DNA:
+  do not claim "a real challenge" unless measured.
+  Only say what the actual evidence supports.
+
+==================================================
+THEN STOP CODING
+==================================================
+
+Run:
+
+npm run lint
+npm run build
+
+Run typecheck if configured.
+
+Test only:
+
+1. Running shoes UAE
+2. UAE skincare
+3. Dubai restaurants
+4. Evidence Vault navigation
+5. mobile width
+6. full Presentation Mode
+
+Confirm:
+- no console errors
+- no 500s
+- no horizontal overflow
+- no dead navigation
+- no visible WhiteSpace branding
+- no em dash in our product copy
+- no fake data
+- Oriane key remains server-side
+
+==================================================
+REPUBLISH
+==================================================
+
+Republish:
+
+https://kandelta.replit.app/
+
+Then test the PUBLIC URL, not Preview.
+
+If all three searches work and Presentation Mode passes, stop modifying the app.
+
+==================================================
+GITHUB IS MANDATORY
+==================================================
+
+The final Replit code is NOT yet on GitHub.
+
+GitHub currently only has:
+
+main
+claude-track
+
+Create/use:
+
+replit-track
+
+from the FINAL DEPLOYED state.
+
+Check:
+
+git status
+git remote -v
+
+Origin must be:
+
+https://github.com/4waiz/kandelta.git
+
+Commit final changes.
+
+Suggested message:
+
+"feat: finalize KanDelta hackathon release"
+
+Do NOT add AI co-author metadata.
+
+Push:
+
+git push -u origin replit-track
+
+DO NOT force push.
+DO NOT rebase.
+DO NOT rewrite history.
+DO NOT merge main.
+
+If GitHub push fails because Replit lacks authorization, stop and tell me:
+
+GITHUB AUTHORIZATION REQUIRED
+
+and give me the exact UI step required.
+
+==================================================
+FINAL RESPONSE
+==================================================
+
+When completely done, reply ONLY with:
+
+PUBLIC URL:
+REPLIT-TRACK COMMIT:
+GITHUB PUSH: PASS/FAIL
+RUNNING SHOES UAE: PASS/FAIL
+UAE SKINCARE: PASS/FAIL
+DUBAI RESTAURANTS: PASS/FAIL
+PRESENTATION MODE: PASS/FAIL
+MOBILE: PASS/FAIL
+BUILD: PASS/FAIL
+REMAINING ISSUE: NONE / ...

@@ -1,0 +1,15 @@
+{
+  "name": "running (visual styles)",
+  "window": { "after": "2026-06-27", "before": "2026-09-27" },
+  "market": { "phrases": ["running", "runner", "marathon"], "fields": ["caption"] },
+  "concepts": [
+    { "name": "Desert heat run", "visual": "a person running outdoors under hot desert sun" },
+    { "name": "Talking head", "visual": "a person talking directly to the camera" },
+    { "name": "Studio product shot", "visual": "close-up of running shoes on a plain studio background" },
+    { "name": "Running POV", "visual": "first-person point of view footage while running outdoors" },
+    { "name": "Treadmill indoors", "visual": "a person running on a treadmill in a gym" },
+    { "name": "Run club group", "visual": "a group of people running together on a city street" },
+    { "name": "Race finish line", "visual": "a runner crossing the finish line at a race" },
+    { "name": "Night run", "visual": "a person running outdoors at night under street lights" }
+  ]
+}

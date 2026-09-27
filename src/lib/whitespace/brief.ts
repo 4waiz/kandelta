@@ -87,16 +87,17 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
     : angle.structure.map((s) => fill(s, topic));
 
   const premise = compoundOf
-    ? `Put ${topic} through ${heatWords} on camera and show what holds up. Few creators do this, and the few who do out-reach the market.`
+    ? `Proposed creative test: put ${topic} through ${heatWords} on camera and show what holds up. A frame match does not establish that the sampled posts tested a product in local heat.`
     : fill(angle.premise, topic);
 
   const talkFirst = (dna.norms.talkFirstShare ?? 0) >= 0.5;
-  const med = dna.norms.medianDuration;
-  const openingShot = talkFirst
+  const openingShot = !evidence.length
+    ? "Creative suggestion: open on the proposed environment or product; no qualified example supports a specific opening style."
+    : talkFirst
     ? `Open talking within the first second (as ${Math.round((dna.norms.talkFirstShare ?? 0) * 100)}% of the transcribed evidence does), with the temperature or the stakes visible in frame.`
     : `Open on a strong visual (the environment or the product under stress) before anyone speaks. Most evidence videos let the picture carry the first seconds.`;
 
-  const tone =
+  const tone = !evidence.length ? "Creative suggestion only; no qualified example supports an audio style." :
     (dna.norms.originalAudioShare ?? 0) >= 0.5
       ? "Authentic, first-person, original audio. The evidence skews toward the creator's own voice rather than trending tracks."
       : "Energetic and music-led. The evidence skews toward licensed / trending audio.";
@@ -105,20 +106,20 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
   const followerBand = topCreators.length
     ? `${Math.round(Math.min(...topCreators.map((c) => c.followers)) / 1000)}K–${Math.round(Math.max(...topCreators.map((c) => c.followers)) / 1000)}K followers`
     : "mid-sized creators";
-  const creatorProfile = `Creators who already out-perform their own baseline on this angle (see Creator Fit). Top matches sit around ${followerBand}. Prioritise proven execution over follower count.`;
+  const creatorProfile = `Creators with qualified on-topic examples (see Creator Fit). Candidate follower range: ${followerBand}. Confirm product and local-market experience independently.`;
 
   const ctaTrait = dna.traits.find((t) => t.label === "Call to action");
-  const cta = ctaTrait && dna.norms.ctaShare >= 0.3
+  const cta = !evidence.length ? "Creative suggestion: close with a question after the result." : ctaTrait && dna.norms.ctaShare >= 0.3
     ? `Close with a comment prompt ("What should we test next?"). ${ctaTrait.value}.`
     : `Keep the CTA light and after the result ("Would you run in this?"). Most evidence videos carry no hard CTA (${ctaTrait?.value ?? ""}).`;
 
   const refVid = dna.hooks[0] ?? null;
   const references = evidence.slice(0, 4).map((v) => ({ videoId: v.id, handle: v.creator.handle, url: v.url, thumbnail: v.thumbnail, views: v.views, reach: v.reach }));
 
-  const opportunity = `${o.name} holds ${pct(o.supplyShare)} of ${topic} video supply (${o.stats.n.toLocaleString("en-US")} of ${analysis.baseline.n.toLocaleString("en-US")} videos, last 3 months) yet earns ${times(o.reachIndex)} the market's views per follower and ${times(o.engagementIndex)} its engagement per view.`;
-  const whyNow = `Stage: ${o.stage}.${o.momentum !== null ? ` Creators added ${o.momentum >= 1 ? "this angle " + times(o.momentum) + " as fast as" : "this angle more slowly than"} the market over the last 30 days.` : ""} The window is open while supply is still thin.`;
+  const opportunity = `Oriane's ${o.kind === "visual" ? "frame similarity" : "text"} filter matches ${pct(o.supplyShare)} of indexed ${analysis.market.universe} video supply (${o.stats.n.toLocaleString("en-US")} of ${analysis.baseline.n.toLocaleString("en-US")} videos, last 3 months). The matched population records ${times(o.reachIndex)} the market's views per follower and ${times(o.engagementIndex)} its engagement per view. Only ${evidence.length} sampled examples passed the separate relevance review; the population metrics are not qualified-example metrics.`;
+  const whyNow = `Oriane-indexed stage: ${o.stage}.${o.momentum !== null ? ` Matched supply arrived at ${times(o.momentum)} the market's pace over the last 30 days.` : ""} This does not establish a local product opportunity or predict demand.`;
 
-  const audience = `${place ? `${place}-based ` : ""}${topic} viewers on TikTok and Instagram${dna.norms.arabicShare > 0 ? ", English + Arabic" : ""}. They respond to proof over polish: the evidence videos' top comments ask about real-world performance.`;
+  const audience = `Proposed audience: ${place ? `${place}-based ` : ""}${topic} viewers on TikTok and Instagram. ${evidence.length ? `Qualified example posts: ${evidence.length}; this sample is not evidence of local product demand.` : "No qualified example posts were available to support creative patterns."}`;
 
   const script = [
     `HOOK (0–2s): ${hook}`,
@@ -192,6 +193,6 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
     references,
     script,
     platforms,
-    disclaimer: "Recommendation derived from observed evidence. It is not a guaranteed performance prediction.",
+    disclaimer: "Creative proposal using Oriane population statistics and separately reviewed example posts. A visual frame match does not prove a product test, local production, or local-market demand.",
   };
 }

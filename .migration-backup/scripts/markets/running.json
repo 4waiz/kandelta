@@ -1,0 +1,27 @@
+{
+  "name": "running",
+  "window": { "after": "2026-06-27", "before": "2026-09-27" },
+  "market": { "phrases": ["running", "runner", "marathon"], "fields": ["caption"] },
+  "concepts": [
+    { "name": "Unboxing", "phrases": ["unboxing", "unbox"] },
+    { "name": "GRWM", "phrases": ["grwm", "get ready with me"] },
+    { "name": "POV", "phrases": ["pov"] },
+    { "name": "Day in the life", "phrases": ["day in the life", "day in my life"] },
+    { "name": "Tutorial", "phrases": ["how to", "tutorial", "step by step"] },
+    { "name": "Honest review", "phrases": ["honest review", "review"] },
+    { "name": "Before & after", "phrases": ["before and after", "transformation"] },
+    { "name": "Challenge", "phrases": ["challenge"] },
+    { "name": "I tried / tested", "phrases": ["i tried", "tested"] },
+    { "name": "Comparison", "phrases": ["versus", "comparison", "compared"] },
+    { "name": "Myth busting", "phrases": ["myth", "myths"] },
+    { "name": "Mistakes", "phrases": ["mistakes", "stop doing"] },
+    { "name": "Tips & hacks", "phrases": ["tips", "hack"] },
+    { "name": "Storytime", "phrases": ["storytime", "story time"] },
+    { "name": "Ranking", "phrases": ["tier list", "ranking", "ranked"] },
+    { "name": "Budget", "phrases": ["budget", "cheap", "affordable"] },
+    { "name": "Heat & summer", "phrases": ["heat", "hot weather", "humidity"] },
+    { "name": "Motivation", "phrases": ["motivation", "discipline"] },
+    { "name": "Beginner", "phrases": ["beginner", "first marathon", "couch to"] },
+    { "name": "Injury & recovery", "phrases": ["injury", "recovery", "pain"] }
+  ]
+}

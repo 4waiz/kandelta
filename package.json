@@ -1,21 +1,28 @@
 {
-  "name": "whitespace",
+  "name": "kandelta",
   "version": "0.1.0",
+  "description": "Opportunity intelligence for the video internet.",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "demo:fixtures": "WHITESPACE_DATA_MODE=fixture next dev",
+    "explore": "node scripts/explore.mjs",
+    "test:demo": "node --conditions=react-server --import tsx --test test/api-demo.test.ts && playwright test"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "lucide-react": "^1.48.0",
     "next": "16.3.6",
+    "playwright": "^1.63.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "server-only": "^0.0.1",
-    "tailwind-merge": "^3.7.0"
+    "tailwind-merge": "^3.7.0",
+    "tsx": "^4.23.15"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,5 +33,8 @@
     "eslint-config-next": "16.3.6",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }

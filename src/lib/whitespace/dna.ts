@@ -60,6 +60,8 @@ export function hookType(text: string): string {
 export function deriveDNA(videos: Video[], market: GroupStats): CreativeDNA {
   void market;
   const n = videos.length;
+  // With no qualified examples there is no basis for creative patterns.
+  if (!n) return { sample: 0, hooks: [], hookTypes: [], traits: [], hashtags: [], audienceVoice: [], platforms: [], norms: { talkFirstShare: null, medianDuration: null, originalAudioShare: null, medianWordsPerSecond: null, ctaShare: 0, topHookType: null, arabicShare: 0 } };
   const transcribed = videos.filter((v) => v.firstSpeechAt !== null);
   const talkFirst = transcribed.filter((v) => (v.firstSpeechAt ?? 99) <= 1);
   const visualFirst = videos.filter((v) => v.firstSpeechAt === null || v.firstSpeechAt > 3);
@@ -89,12 +91,15 @@ export function deriveDNA(videos: Video[], market: GroupStats): CreativeDNA {
   }
   if (medDur !== null) {
     const short = videos.filter((v) => (v.duration ?? 0) <= 30);
+    const long = videos.filter((v) => (v.duration ?? 0) > 30);
+    const longForm = long.length >= short.length;
     traits.push({
       label: "Duration",
-      value: `Median ${Math.round(medDur)}s · ${short.length} of ${n} run 30s or less`,
-      support: short.length,
+      value: longForm ? `Median ${Math.round(medDur)}s: story-length, not a quick cut` : `Median ${Math.round(medDur)}s: short and fast`,
+      support: longForm ? long.length : short.length,
       of: n,
-      videoIds: short.map((v) => v.id),
+      videoIds: (longForm ? long : short).map((v) => v.id),
+      note: longForm ? "Share of videos longer than 30s." : "Share of videos 30s or shorter.",
     });
   }
   if (wps !== null) {

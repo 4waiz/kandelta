@@ -121,7 +121,7 @@ export async function measure(ctx: Ctx, extra: ContentQuery[], filters: ContentF
 }
 
 async function recentCount(ctx: Ctx, extra: ContentQuery[], filters: ContentFilters = {}): Promise<number> {
-  const r = await ctx.run(() => searchContents({ limit: 1, offset: 0, projection: "basic" }, buildBody(ctx, extra, filters, recentWindow(30))));
+  const r = await ctx.run(() => searchContents({ limit: 1, offset: 0, projection: "basic" }, buildBody(ctx, extra, filters, recentWindow(30, new Date(ctx.market.window.before + "T00:00:00Z")))));
   ctx.sources[r.source]++;
   return r.response.metadata.pagination?.totalCount ?? 0;
 }
@@ -189,7 +189,7 @@ export async function resolveMarket(input: string): Promise<MarketContext> {
   let baseline = await measure(ctx, []);
   let note: string | null = null;
   if (market.location && baseline.n < MIN_MARKET_N) {
-    note = `Only ${baseline.n.toLocaleString("en-US")} ${market.label} videos mention ${market.location.label} in the last 3 months, which is too few for reliable splits. WhiteSpace measured the global ${market.label} market and uses heat as the local lens.`;
+    note = `Only ${baseline.n.toLocaleString("en-US")} ${market.universe} videos mention ${market.location.label} in the last 3 months, which is too few for reliable splits. KanDelta measured the global ${market.universe} market; heat is the local lens.`;
     ctx.useLocation = false;
     baseline = await measure(ctx, []);
   }
@@ -219,7 +219,9 @@ function buildGap(id: string, dimension: string, basis: string, groups: GapGroup
       : `${times(winner.stats.reach / consensus.stats.reach)} the views per follower`;
   const headline = isGap
     ? `${pct(consensus.share)} of ${noun} are ${consensus.label.toLowerCase()}. ${winner.label} is ${pct(winner.share)} of them, yet earns ${lead}.`
-    : `${consensus.label} is both the most common and the best-responding choice. No gap here.`;
+    : winner === consensus
+      ? `${consensus.label} is both the most common and the best-responding choice. No meaningful gap here.`
+      : `${consensus.label} is most common. ${winner.label} responds better, but not enough to meet the 1.25× gap threshold.`;
   const describe = (g: GapGroup) =>
     `${g.label}: ${g.stats.n.toLocaleString("en-US")} videos · ${g.stats.reach.toFixed(2)} views/follower · ${(g.stats.er * 100).toFixed(1)}% engagement/view`;
   return { id, dimension, basis, groups, consensus, winner, ratio, headline, detail: isGap ? `${describe(winner)}. ${describe(consensus)}.` : usable.map(describe).join(". ") + ".", isGap };

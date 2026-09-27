@@ -72,7 +72,7 @@ export const ANGLES: Angle[] = [
     phrases: ["myth", "myths"],
     description: "Debunking common beliefs.",
     premise: "Take one widely-believed claim and test it on camera.",
-    hook: "The biggest myth about {topic} — busted.",
+    hook: "The biggest myth about {topic}, busted.",
     structure: ["State the myth", "Why people believe it", "The test", "The evidence", "What to do instead"],
   },
   {
@@ -135,7 +135,7 @@ export const ANGLES: Angle[] = [
     phrases: ["grwm", "get ready with me"],
     description: "Get-ready-with-me format.",
     premise: "Get ready with me, with {topic} as the thread.",
-    hook: "Get ready with me — {topic} edition.",
+    hook: "Get ready with me: {topic} edition.",
     structure: ["Talk-to-camera opener", "Step-by-step prep", "Story while prepping", "Final look", "Out the door"],
   },
   {
