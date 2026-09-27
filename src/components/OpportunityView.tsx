@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useJson } from "@/lib/useJson";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AlertTriangle, ArrowLeft, Eye, MessageSquareText, RotateCw, ShieldCheck } from "lucide-react";
@@ -66,29 +67,9 @@ export function OpportunityView() {
   const params = useSearchParams();
   const q = params.get("q") ?? "";
   const id = params.get("id") ?? "";
-  const [data, setData] = useState<OpportunityDetail | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [nonce, setNonce] = useState(0);
+  const { data, error, retry } = useJson<OpportunityDetail>(q && id ? `/api/opportunity?q=${encodeURIComponent(q)}&id=${encodeURIComponent(id)}` : null);
   const [showAds, setShowAds] = useState(false);
   const { save, isSaved } = useVault();
-
-  useEffect(() => {
-    if (!q || !id) return;
-    let cancelled = false;
-    setData(null);
-    setError(null);
-    fetch(`/api/opportunity?q=${encodeURIComponent(q)}&id=${encodeURIComponent(id)}`)
-      .then(async (r) => {
-        const j = await r.json();
-        if (cancelled) return;
-        if (!r.ok) setError(j.error ?? "Video intelligence temporarily unavailable.");
-        else setData(j);
-      })
-      .catch(() => !cancelled && setError("Video intelligence temporarily unavailable."));
-    return () => {
-      cancelled = true;
-    };
-  }, [q, id, nonce]);
 
   const labCtx: LabContext | null = useMemo(() => {
     if (!data) return null;
@@ -114,7 +95,7 @@ export function OpportunityView() {
         <div className="flex items-center gap-2 text-sm font-medium">
           <AlertTriangle size={16} className="text-warn" /> {error}
         </div>
-        <Button variant="outline" onClick={() => setNonce((n) => n + 1)}>
+        <Button variant="outline" onClick={retry}>
           <RotateCw size={14} /> Try again
         </Button>
       </div>
@@ -200,7 +181,7 @@ export function OpportunityView() {
             <p className="mt-3 flex items-start gap-2 text-sm text-muted">
               <Eye size={15} className="mt-0.5 shrink-0 text-accent" />
               <span>
-                Found by watching, not reading: only {fmtInt(data.captionOverlap.n)} of these {fmtInt(o.stats.n)} videos say or write “{data.captionOverlap.phrases[0]}”. A caption or transcript search would miss{" "}
+                Found by watching, not reading: only {fmtInt(data.captionOverlap.n)} of these {fmtInt(o.stats.n)} videos mention {data.captionOverlap.phrases.join(", ").replace(/, ([^,]*)$/, " or $1")} in their caption or speech. A caption or transcript search would miss{" "}
                 <span className="text-fg">{fmtPct(missed / o.stats.n, 0)}</span> of this opportunity. Oriane&apos;s vision sees it in the frames.
               </span>
             </p>

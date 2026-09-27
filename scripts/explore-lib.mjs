@@ -25,7 +25,7 @@ export function cacheKey(p, query, body) {
   return crypto.createHash('sha1').update(p + '|' + stableStringify(query) + '|' + stableStringify(body)).digest('hex').slice(0, 20);
 }
 
-let liveCalls = 0;
+
 export async function oriane(p, query, body) {
   const key = cacheKey(p, query, body);
   const file = path.join(CACHE_DIR, key + '.json');
@@ -36,7 +36,7 @@ export async function oriane(p, query, body) {
     headers: { 'content-type': 'application/json', Authorization: `Bearer ${KEY}` },
     body: JSON.stringify(body),
   });
-  liveCalls++;
+
   const text = await r.text();
   let json;
   try { json = JSON.parse(text); } catch { json = { raw: text.slice(0, 500) }; }

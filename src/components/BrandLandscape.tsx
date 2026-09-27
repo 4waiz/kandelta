@@ -1,29 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useJson } from "@/lib/useJson";
 import { EarOff, ExternalLink } from "lucide-react";
 import type { Landscape } from "@/lib/whitespace/landscape";
 import { fmtCompact, fmtInt, fmtPct } from "@/lib/format";
 import { Skeleton } from "./ui";
 
 export function BrandLandscape({ q, id, universe, opportunityName }: { q: string; id: string; universe: string; opportunityName: string }) {
-  const [data, setData] = useState<Landscape | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(`/api/landscape?q=${encodeURIComponent(q)}&id=${encodeURIComponent(id)}`)
-      .then(async (r) => {
-        const j = await r.json();
-        if (cancelled) return;
-        if (!r.ok) setError(j.error ?? "Video intelligence temporarily unavailable.");
-        else setData(j);
-      })
-      .catch(() => !cancelled && setError("Video intelligence temporarily unavailable."));
-    return () => {
-      cancelled = true;
-    };
-  }, [q, id]);
+  const { data, error } = useJson<Landscape>(`/api/landscape?q=${encodeURIComponent(q)}&id=${encodeURIComponent(id)}`);
 
   if (error) return <div className="rounded-xl border border-line bg-panel p-5 text-sm text-muted">{error}</div>;
   if (!data) return <Skeleton className="h-64" />;
@@ -38,7 +22,7 @@ export function BrandLandscape({ q, id, universe, opportunityName }: { q: string
       <div className="rounded-xl border border-line bg-panel p-5">
         <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">Who&apos;s already there</div>
         <p className="mt-2 text-[15px] font-medium leading-snug">
-          The {data.brands.length} biggest {universe} brands show up in {fmtInt(totalMentions)} {universe} videos, but only {fmtInt(data.brandedInOpportunity)} of those mentions are {opportunityName.toLowerCase()} videos. No brand owns this space yet.
+          The {data.brands.length} biggest {universe} brands collect {fmtInt(totalMentions)} mentions across {universe} videos, but only {fmtInt(data.brandedInOpportunity)} of those mentions are in {opportunityName.toLowerCase()} videos. No brand owns this space yet.
         </p>
         <div className="mt-4 grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_70px_90px] gap-x-3 pb-1.5 text-[10px] uppercase tracking-wider text-faint">
           <span>Brand</span>

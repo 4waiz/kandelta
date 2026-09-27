@@ -35,19 +35,27 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
     const placed: { x: number; y: number; w: number; h: number }[] = [];
     const labels: { id: string; x: number; y: number; text: string; anchor: "start" | "end" }[] = [];
     const order = pts.slice().sort((a, b) => b.o.score - a.o.score);
-    for (const p of order.slice(0, 12)) {
+    const coversBubble = (bx: number, by: number, w: number, self: (typeof pts)[number]) =>
+      pts.some((q) => q !== self && q.x + q.r > bx && q.x - q.r < bx + w && q.y + q.r > by && q.y - q.r < by + 12);
+    for (const p of order.slice(0, 9)) {
       const text = p.o.name;
       const w = text.length * 6.4 + 6;
-      const right = p.x + p.r + 6 + w < W - M.r;
-      for (const dy of [0, -13, 13, -26, 26]) {
-        const bx = right ? p.x + p.r + 5 : p.x - p.r - 5 - w;
-        const by = p.y - 6 + dy;
-        const hit = placed.some((b) => bx < b.x + b.w && bx + w > b.x && by < b.y + b.h && by + 12 > b.y) || pts.some((q) => q !== p && Math.hypot(q.x - (bx + w / 2), q.y - (by + 6)) < q.r + 2 && false);
-        if (!hit) {
-          placed.push({ x: bx, y: by, w, h: 12 });
-          labels.push({ id: p.o.id, x: right ? bx : bx + w, y: by + 9.5, text, anchor: right ? "start" : "end" });
-          break;
+      const sides = p.x + p.r + 6 + w < W - M.r ? [true, false] : [false, true];
+      let done = false;
+      for (const right of sides) {
+        for (const dy of [0, -13, 13, -24, 24]) {
+          const bx = right ? p.x + p.r + 5 : p.x - p.r - 5 - w;
+          const by = p.y - 6 + dy;
+          if (bx < M.l || bx + w > W - M.r) continue;
+          const hit = placed.some((b) => bx < b.x + b.w && bx + w > b.x && by < b.y + b.h && by + 12 > b.y) || coversBubble(bx, by, w, p);
+          if (!hit) {
+            placed.push({ x: bx, y: by, w, h: 12 });
+            labels.push({ id: p.o.id, x: right ? bx : bx + w, y: by + 9.5, text, anchor: right ? "start" : "end" });
+            done = true;
+            break;
+          }
         }
+        if (done) break;
       }
     }
 
@@ -56,7 +64,7 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
     return { sx, sy, pts, labels, xTicks, yTicks, xMin, xMax, yMin, yMax };
   }, [items]);
 
-  const { sx, sy, pts, labels, xTicks, yTicks, yMax, xMin } = geo;
+  const { sx, sy, pts, labels, xTicks, yTicks, yMax } = geo;
   const splitX = sx(Math.log10(SPLIT_SHARE));
   const splitY = sy(0);
 
@@ -141,9 +149,6 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
             </text>
           );
         })}
-        <text x={M.l} y={H - M.b + 30} className="fill-[var(--faint)] text-[9px]">
-          {xMin < -2.9 ? "" : ""}
-        </text>
       </svg>
 
       {hover ? <Tooltip o={hover} x={pts.find((p) => p.o.id === hover.id)!.x} y={pts.find((p) => p.o.id === hover.id)!.y} /> : null}

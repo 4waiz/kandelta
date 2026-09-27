@@ -12,6 +12,7 @@ import { SearchBox } from "./SearchBox";
 import { Button, Chip, Skeleton, StageBadge } from "./ui";
 import { SourceBadge } from "./SourceBadge";
 import { DEMO_OPPORTUNITY, usePresenter } from "./Presenter";
+import { useJson } from "@/lib/useJson";
 
 const LOADING = [
   "Asking Oriane what's inside the videos…",
@@ -22,27 +23,7 @@ const LOADING = [
 ];
 
 export function useAnalysis(q: string | null) {
-  const [data, setData] = useState<MarketAnalysis | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [nonce, setNonce] = useState(0);
-  useEffect(() => {
-    if (!q) return;
-    let cancelled = false;
-    setData(null);
-    setError(null);
-    fetch(`/api/analyze?q=${encodeURIComponent(q)}`)
-      .then(async (r) => {
-        const j = await r.json();
-        if (cancelled) return;
-        if (!r.ok) setError(j.error ?? "Video intelligence temporarily unavailable.");
-        else setData(j);
-      })
-      .catch(() => !cancelled && setError("Video intelligence temporarily unavailable."));
-    return () => {
-      cancelled = true;
-    };
-  }, [q, nonce]);
-  return { data, error, retry: () => setNonce((n) => n + 1) };
+  return useJson<MarketAnalysis>(q ? `/api/analyze?q=${encodeURIComponent(q)}` : null);
 }
 
 export function DiscoverView() {
@@ -71,7 +52,7 @@ export function DiscoverView() {
   return (
     <div className="pt-8">
       <div className="max-w-xl">
-        <SearchBox size="sm" />
+        <SearchBox size="sm" key={q} />
       </div>
 
       {error ? (

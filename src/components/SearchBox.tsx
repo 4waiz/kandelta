@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ArrowRight, Search } from "lucide-react";
 import { DEMO_QUERY } from "./Presenter";
 
@@ -10,12 +10,7 @@ const EXAMPLES = [DEMO_QUERY, "UAE beauty creators", "Specialty coffee", "Luxury
 export function SearchBox({ size = "lg" }: { size?: "lg" | "sm" }) {
   const router = useRouter();
   const params = useSearchParams();
-  const [q, setQ] = useState("");
-
-  useEffect(() => {
-    const fromUrl = params.get("q");
-    if (fromUrl) setQ(fromUrl);
-  }, [params]);
+  const [q, setQ] = useState(() => params.get("q") ?? "");
 
   const submit = (value: string) => {
     const v = value.trim();

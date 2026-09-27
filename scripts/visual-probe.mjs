@@ -1,6 +1,4 @@
 // Calibrate Oriane visual similarity: create a text asset, then search the running market by it.
-import fs from 'node:fs';
-import path from 'node:path';
 import { oriane } from './explore-lib.mjs';
 import { asset } from './asset-lib.mjs';
 

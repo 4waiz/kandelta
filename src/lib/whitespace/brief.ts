@@ -91,7 +91,6 @@ export function buildBrief({ analysis, opportunity: o, angle, dna, evidence, cre
     : fill(angle.premise, topic);
 
   const talkFirst = (dna.norms.talkFirstShare ?? 0) >= 0.5;
-  const med = dna.norms.medianDuration;
   const openingShot = talkFirst
     ? `Open talking within the first second (as ${Math.round((dna.norms.talkFirstShare ?? 0) * 100)}% of the transcribed evidence does), with the temperature or the stakes visible in frame.`
     : `Open on a strong visual (the environment or the product under stress) before anyone speaks. Most evidence videos let the picture carry the first seconds.`;

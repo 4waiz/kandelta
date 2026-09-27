@@ -70,6 +70,8 @@ export function PresenterProvider({ children }: { children: ReactNode }) {
     try {
       const saved = JSON.parse(localStorage.getItem("ws-present") ?? "null");
       if (saved?.active) {
+        // Restoring presenter state from browser storage after hydration (server has no storage).
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setActive(true);
         setStep(saved.step ?? 0);
       }
