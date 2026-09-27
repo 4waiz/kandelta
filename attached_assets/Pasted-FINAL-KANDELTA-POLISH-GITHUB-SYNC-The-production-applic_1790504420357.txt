@@ -1,0 +1,655 @@
+FINAL KANDELTA POLISH + GITHUB SYNC.
+
+The production application is now live at:
+
+https://kandelta.replit.app/
+
+DO NOT rebuild the product from scratch.
+DO NOT change the scoring methodology.
+DO NOT fabricate data.
+DO NOT alter the proven Running shoes UAE demo numbers.
+DO NOT touch Oriane raw cached responses unnecessarily.
+
+This is a focused final polish pass.
+
+Priorities:
+
+1. fix the production search error I discovered
+2. improve the KanDelta logo / brand mark
+3. remove visible em dashes
+4. redesign Crowd Gap to be much more visual and less text-heavy
+5. re-test production
+6. push ALL final deployed code to GitHub
+
+Repository:
+
+https://github.com/4waiz/kandelta
+
+========================================================
+1. FIX THE PRODUCTION SEARCH ERROR
+========================================================
+
+I tested the public production app.
+
+These built-in/example searches can currently fail:
+
+UAE skincare
+
+and:
+
+Dubai restaurants
+
+I saw:
+
+"Video intelligence temporarily unavailable."
+
+and:
+
+"No cached result exists for this search yet. KanDelta never substitutes made-up data."
+
+I also saw an opportunity URL such as:
+
+/opportunity?q=UAE%20skincare&id=grwm
+
+fail.
+
+The proven cached:
+
+Running shoes UAE
+
+demo works correctly.
+
+FIRST diagnose the real production problem.
+
+Do NOT hide the error with fake data.
+
+Check:
+
+- deployed server logs
+- /api/health if available
+- whether ORIANE_API_KEY is actually available inside the production deployment
+- whether live server-side Oriane requests work from production
+- upstream HTTP status/error
+- whether the failure is authentication, rate limit, timeout, request construction, network, or missing cache
+- whether the API key is present without ever printing its value
+
+IMPORTANT:
+
+Never log or display ORIANE_API_KEY.
+
+If production Oriane access works:
+make uncached searches correctly query Oriane server-side,
+cache the REAL response,
+then render it.
+
+If production Oriane access does NOT work:
+do not leave clickable example chips that are guaranteed to fail.
+
+In that case either:
+
+A. create REAL cached results for the visible example markets using Oriane,
+if credit usage is reasonable,
+
+OR
+
+B. temporarily show only verified/cached examples.
+
+Never fabricate a dataset.
+
+The homepage should not invite the user to click an example that immediately dead-ends.
+
+Also improve the error state.
+
+Instead of a giant dead-end panel, make it concise:
+
+"Couldn't reach video intelligence"
+
+[Retry]
+
+and if applicable:
+
+"No verified cached result exists yet."
+
+Keep the honesty but make it visually polished.
+
+========================================================
+2. MAKE THE KANDELTA LOGO MUCH BETTER
+========================================================
+
+The current outlined triangle inside a square is too generic.
+
+Create a distinctive minimal SVG logo for KanDelta.
+
+Concept:
+
+KAN + DELTA.
+
+Use the mathematical delta as the idea of divergence.
+
+I want a mark that visually represents:
+
+creator supply
+        ↘
+         Δ GAP
+        ↗
+audience response
+
+Create a compact geometric icon using two diverging strokes that form an abstract Δ but intentionally leave a small gap.
+
+It should communicate:
+
+difference
+divergence
+signal
+opportunity
+
+Preferred visual:
+
+- premium SaaS identity
+- geometric
+- minimalist
+- no gradients
+- no AI-looking sparkle
+- no complex illustration
+- near-white + current mint accent on dark mode
+- works at 16px favicon size
+- works in nav at ~28px
+- recognizable without the wordmark
+
+Possible construction:
+
+two angled paths forming most of a delta,
+with one intentional break/gap,
+plus a subtle inner signal point or line.
+
+Do NOT make it look like:
+- crypto logo
+- recycling logo
+- warning icon
+- generic play button
+
+Wordmark:
+
+KanDelta
+
+Keep:
+
+by Team Kanban
+
+subtle.
+
+Update:
+
+- navbar
+- favicon
+- metadata icon if appropriate
+- presentation mode
+- loading/empty brand treatment
+
+Use inline SVG / project SVG assets.
+Do not introduce unnecessary image dependencies.
+
+========================================================
+3. REMOVE EM DASHES
+========================================================
+
+Remove visible em dashes:
+
+—
+
+from all USER-FACING KanDelta copy.
+
+Use:
+
+commas
+periods
+colons
+parentheses
+or short separate sentences.
+
+For example:
+
+CURRENT:
+
+"KanDelta analyzes the video internet to uncover places where audience response and creator supply diverge — before the opportunity becomes crowded."
+
+CHANGE TO:
+
+"KanDelta analyzes the video internet to uncover places where audience response and creator supply diverge before the opportunity becomes crowded."
+
+Search all user-visible source strings.
+
+Also clean README/marketing copy if convenient.
+
+IMPORTANT:
+
+Do NOT mutate raw Oriane cache JSON, creator captions, transcripts, or source-video content just because those sources naturally contain em dashes.
+
+Only our own product copy.
+
+========================================================
+4. REDESIGN CROWD GAP
+========================================================
+
+The current Crowd Gap section works analytically but is too text-heavy.
+
+The current screenshot contains four large cards:
+
+VISUAL STYLE
+TAGGING
+SOUND
+COLLABORATION
+
+with paragraphs and methodology text.
+
+Preserve the EXACT real metrics and methodology.
+
+Do NOT create new measurements.
+
+But completely improve the visual communication.
+
+Goal:
+
+A judge should understand each card in 2–3 seconds.
+
+========================================================
+NEW CROWD GAP DESIGN
+========================================================
+
+Keep heading:
+
+CROWD GAP
+
+"What everyone makes vs what audiences reward"
+
+Then use four compact insight tiles.
+
+Each tile should contain:
+
+ICON
+CATEGORY
+ONE SHORT VERDICT
+MINI VISUALIZATION
+1–2 IMPORTANT NUMBERS
+
+Use Lucide icons or equivalent:
+
+Visual Style:
+camera / sun / eye
+
+Tagging:
+tag
+
+Sound:
+audio waveform / volume
+
+Collaboration:
+users
+
+========================================================
+VISUAL STYLE TILE
+========================================================
+
+This is the actual interesting Crowd Gap.
+
+Make it visually dominant.
+
+Instead of paragraphs, show something like:
+
+[Camera icon] VISUAL STYLE
+
+Creators make
+Studio product shot
+████████████████ 66%
+
+Audience rewards
+Desert heat
+██████████████████████ 1.41x
+
+small:
+
+3% of style-matched supply
+2.3x engagement/view
+
+Badge:
+
+1.53x CROWD GAP
+
+Use a visual arrow / divergence indicator between:
+
+66% creator behavior
+
+and
+
+3% underserved format
+
+The point should be visually obvious:
+
+THE CROWD → Studio
+THE DELTA → Desert Heat
+
+========================================================
+TAGGING TILE
+========================================================
+
+[tag icon]
+
+TAGGING
+
+59%
+Untagged
+
+0.98x response
+
+Status:
+
+NO MEANINGFUL GAP
+
+Use a tiny paired bar/chart.
+
+Do not use a paragraph to explain it.
+
+========================================================
+SOUND TILE
+========================================================
+
+[waveform icon]
+
+SOUND
+
+78%
+Original audio
+
+0.99x response
+
+Status:
+
+NO MEANINGFUL GAP
+
+Tiny paired visualization.
+
+========================================================
+COLLABORATION TILE
+========================================================
+
+[users icon]
+
+COLLABORATION
+
+95%
+Solo
+
+1.02x response
+
+Status:
+
+NO MEANINGFUL GAP
+
+Tiny paired visualization.
+
+========================================================
+METHODOLOGY
+========================================================
+
+Move long methodology sentences out of the main cards.
+
+Add one compact:
+
+ⓘ Method
+
+button/popover/accordion.
+
+Inside it preserve:
+
+sample size
+Oriane modality
+formula
+date window
+source universe
+
+Example:
+
+"Based on 90,699 Instagram + TikTok videos..."
+
+The data remains transparent but does not dominate the interface.
+
+========================================================
+OVERALL CROWD GAP LAYOUT
+========================================================
+
+Desktop:
+
+large Visual Style insight on left
+
+three smaller signal cards on right
+or a polished 2x2 grid with the real gap emphasized.
+
+Use hierarchy.
+
+Actual gaps:
+mint accent.
+
+"No gap":
+muted neutral styling.
+
+Do not make all cards equally visually important.
+
+Use:
+
+icons
+paired bars
+small dumbbell charts
+arrows
+percentage rings
+micro visualizations
+
+instead of paragraphs.
+
+No pie-chart clutter.
+
+No giant cards.
+
+No excessive borders.
+
+Keep it consistent with the existing premium dark KanDelta design.
+
+========================================================
+5. DO NOT BREAK THE DELTA MAP
+========================================================
+
+The Delta Map already looks strong.
+
+Do not redesign it heavily.
+
+Only fix obvious overlap/readability issues if necessary.
+
+Preserve:
+
+Opportunity Delta
+Saturated Winners
+Low Signal
+Content Noise
+
+and the existing visual distinction:
+
+Oriane vision
+speech/caption
+opportunity delta
+
+========================================================
+6. PRODUCTION QUALITY CHECK
+========================================================
+
+After the changes run:
+
+npm install
+npm run lint
+npm run build
+
+typecheck if configured.
+
+Run the production app.
+
+Test:
+
+/
+Running shoes UAE
+UAE skincare
+Dubai restaurants
+/opportunity routes
+Evidence Vault
+Present mode
+
+The verified Running shoes UAE demo MUST remain unchanged.
+
+Test the complete Presentation Mode:
+
+Delta Map
+→ Desert Heat
+→ Evidence
+→ Crowd Gap
+→ Hidden Conversation
+→ Creative DNA
+→ Audience Lab
+→ Apply
+→ Creator Fit
+→ Campaign Brief
+→ TikTok / Reels / Shorts
+
+Confirm:
+
+- no console errors
+- no server errors
+- no broken source thumbnails
+- no direct browser Oriane calls
+- key remains server-side
+- no fake fallback data
+- no visible em dash in our product copy
+- new logo displays properly
+- Crowd Gap is substantially more visual
+- mobile layout remains usable
+
+========================================================
+7. REPUBLISH
+========================================================
+
+Once production checks pass:
+
+Republish:
+
+https://kandelta.replit.app/
+
+Then test the ACTUAL public deployment in a clean browser.
+
+Do not consider the task complete because Preview works.
+
+The public domain must work.
+
+========================================================
+8. PUSH EVERYTHING TO GITHUB
+========================================================
+
+This is critical.
+
+At the moment, GitHub does not contain a remote `replit-track` branch.
+
+The final deployed Replit changes MUST be pushed.
+
+First inspect:
+
+git status
+git branch --show-current
+git remote -v
+git log --oneline -8
+
+Origin must be:
+
+https://github.com/4waiz/kandelta.git
+
+Do NOT rewrite Git history.
+Do NOT force push.
+Do NOT run an interactive rebase.
+
+If needed create/use:
+
+replit-track
+
+from the CURRENT WORKING DEPLOYED STATE.
+
+Commit ALL required final source/runtime changes.
+
+Do NOT commit:
+
+.env
+API keys
+secrets
+temporary logs
+node_modules
+build output
+
+Suggested commits:
+
+fix: make uncached Oriane searches production-safe
+
+style: refine KanDelta branding and Crowd Gap visuals
+
+chore: finalize Replit production deployment
+
+Then:
+
+git push -u origin replit-track
+
+If GitHub rejects the push because Replit does not have write authorization:
+
+STOP and tell me exactly:
+
+"GITHUB AUTHORIZATION REQUIRED"
+
+and tell me which Replit Version Control/GitHub connection button I need to use.
+
+Do NOT silently leave final code only inside Replit.
+
+========================================================
+9. GET THE FINAL CODE ON MAIN
+========================================================
+
+After:
+
+- public deployment passes
+- replit-track is safely pushed
+- build is green
+
+create a normal GitHub pull request:
+
+replit-track
+→ main
+
+Do NOT force-update main.
+
+If the PR is conflict-free and GitHub authorization permits it,
+tell me it is ready to merge.
+
+Do NOT rewrite old commit history during this task.
+
+The final GitHub main branch must eventually represent the actual hackathon submission rather than the old WhiteSpace baseline.
+
+========================================================
+FINAL REPORT
+========================================================
+
+When done report ONLY:
+
+1. production URL
+2. whether UAE skincare works
+3. whether Dubai restaurants works
+4. how uncached searches were fixed
+5. logo update summary
+6. Crowd Gap redesign summary
+7. lint/build/typecheck results
+8. replit-track commit SHA
+9. GitHub branch URL / PR
+10. any remaining issue
+
+Do not start unrelated feature work.
+
+Execute now.
