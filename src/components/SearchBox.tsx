@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ArrowRight, Search } from "lucide-react";
 import { DEMO_QUERY } from "./Presenter";
 
-const EXAMPLES = [DEMO_QUERY, "UAE beauty creators", "Specialty coffee", "Luxury travel", "Fitness content", "Dubai restaurants"];
+const EXAMPLES = [DEMO_QUERY, "UAE skincare", "Dubai restaurants", "Specialty coffee", "Luxury travel"];
 
 export function SearchBox({ size = "lg" }: { size?: "lg" | "sm" }) {
   const router = useRouter();
@@ -36,7 +36,7 @@ export function SearchBox({ size = "lg" }: { size?: "lg" | "sm" }) {
           aria-label="Market, brand or audience"
         />
         <button type="submit" className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-fg px-4 py-2 text-sm font-medium text-bg transition-colors hover:bg-white">
-          Find White Space <ArrowRight size={15} />
+          Find the Delta <ArrowRight size={15} />
         </button>
       </form>
       {size === "lg" ? (

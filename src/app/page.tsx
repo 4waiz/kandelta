@@ -15,7 +15,7 @@ const STORY = [
   },
   {
     icon: Sparkles,
-    title: "What WhiteSpace finds",
+    title: "What KanDelta finds",
     body: "Creative angles audiences reward that few creators make yet, with the proof, the recipe, the right creators, and a brief ready to shoot.",
   },
 ];
@@ -28,13 +28,13 @@ export default function Home() {
       <div className="fade-in">
         <div className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Opportunity intelligence for the video internet</div>
         <h1 className="mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-[56px]">
-          Stop chasing trends.
+          Find the delta
           <br />
-          <span className="text-muted">Find the space everyone else missed.</span>
+          <span className="text-muted">before the market does.</span>
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-          WhiteSpace looks at what people actually watch and what creators actually make, then shows you the creative
-          opportunities audiences reward before they get crowded.
+          KanDelta analyzes the video internet to uncover places where audience response and creator supply diverge — before
+          the opportunity becomes crowded.
         </p>
       </div>
 

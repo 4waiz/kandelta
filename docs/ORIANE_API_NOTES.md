@@ -103,7 +103,7 @@ Asset ids are reusable; we cache them in `data/oriane-assets.json`.
 
 Visual similarity calibration (running market, 90 days, text asset "a person running outdoors under hot desert
 sun"): no `minScore` → 1,359 matches; `minScore 0.75` → 759; `minScore 0.8` → 352. Top frame scores reach 0.99.
-Matching frames carry `visualSimilarityScore`. WhiteSpace uses **0.8** as a "strong visual match".
+Matching frames carry `visualSimilarityScore`. KanDelta uses **0.8** as a "strong visual match".
 Caveat: visually-indexed matches skew toward higher-view videos, so visual groups are only compared with each other,
 never against a caption-based baseline.
 
@@ -124,7 +124,7 @@ creator handle, followers, bio and picture.)
 
 - No credit price or rate limit is documented publicly (the pricing page shows no API rates, and the API reference
   has no rate-limit section). No rate-limit headers are returned.
-- Credit-protection strategy in WhiteSpace:
+- Credit-protection strategy in KanDelta:
   - population statistics use `limit=3` requests (supply + attention come from `totalCount` + `aggregations`),
   - rich `full` payloads are fetched only for evidence of the top opportunities,
   - every response is cached on disk (`data/oriane-cache/`) keyed by a stable hash of path + query + body, and

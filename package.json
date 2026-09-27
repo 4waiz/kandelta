@@ -1,6 +1,7 @@
 {
-  "name": "whitespace",
+  "name": "kandelta",
   "version": "0.1.0",
+  "description": "Opportunity intelligence for the video internet.",
   "private": true,
   "scripts": {
     "dev": "next dev",

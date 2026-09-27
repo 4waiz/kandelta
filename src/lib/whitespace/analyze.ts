@@ -189,7 +189,7 @@ export async function resolveMarket(input: string): Promise<MarketContext> {
   let baseline = await measure(ctx, []);
   let note: string | null = null;
   if (market.location && baseline.n < MIN_MARKET_N) {
-    note = `Only ${baseline.n.toLocaleString("en-US")} ${market.universe} videos mention ${market.location.label} in the last 3 months, which is too few for reliable splits. WhiteSpace measured the global ${market.universe} market; heat is the local lens.`;
+    note = `Only ${baseline.n.toLocaleString("en-US")} ${market.universe} videos mention ${market.location.label} in the last 3 months, which is too few for reliable splits. KanDelta measured the global ${market.universe} market; heat is the local lens.`;
     ctx.useLocation = false;
     baseline = await measure(ctx, []);
   }

@@ -7,9 +7,9 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "WhiteSpace — Opportunity intelligence for the video internet",
+  title: "KanDelta — Opportunity intelligence for the video internet",
   description:
-    "Find where attention is going before everyone else gets there. WhiteSpace reads what Oriane sees inside millions of videos and finds the creative spaces audiences reward but creators haven't filled.",
+    "Find the delta before the market does. KanDelta finds where audience attention and creator supply diverge, using Oriane's video intelligence.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
