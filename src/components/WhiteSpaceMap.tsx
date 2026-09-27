@@ -178,7 +178,7 @@ export function WhiteSpaceMap({ items, onSelect, highlight }: { items: Opportuni
         {gap && gapLabel ? (
           <g className="pointer-events-none">
             <text x={gapLabel.x} y={gapLabel.y} textAnchor={gapLabel.anchor} className="fill-[var(--accent)] text-[14px] font-semibold">
-              The gap: {gap.o.name}
+              The delta: {gap.o.name}
             </text>
             <text x={gapLabel.x} y={gapLabel.y + 15} textAnchor={gapLabel.anchor} className="fill-[var(--muted)] text-[11px]">
               {fmtPct(gap.o.supplyShare)} of supply · {fmtX(gap.o.relativePerformance)} response · {fmtInt(gap.o.stats.n)} videos

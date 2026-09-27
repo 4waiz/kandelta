@@ -19,18 +19,19 @@ export interface Step {
 }
 
 export const STEPS: Step[] = [
-  { title: "The problem", say: "A running brand launching in the UAE asks: what should we make? Everyone copies what's already trending, so they arrive when it's crowded.", href: `/?q=${q}`, target: "search" },
-  { title: "Delta Map", say: "Oriane watched every running video from the last 3 months. Each bubble is a creative angle. Left = few creators make it. Up = audiences respond more than average.", href: `/discover?q=${q}`, target: "map" },
-  { title: "Open the delta", say: "Top-left is the delta: high audience response, low creator supply. The strongest signal wasn't found in captions: Oriane's vision found it in the frames.", href: `/discover?q=${q}`, target: "top-opportunities" },
+  { title: "Everyone sees the trend", say: "Everyone can see what's trending. KanDelta finds where the market hasn't caught up yet. A running brand launching in the UAE asks: what should we make?", href: `/?q=${q}`, target: "search" },
+  { title: "Delta Map", say: "Oriane watched every running video from the last 3 months. Each bubble is a creative angle. Left = few creators make it. Up = audiences respond more than average. Everyone is over here. This is the delta.", href: `/discover?q=${q}`, target: "map" },
+  { title: "Open the delta", say: "Top-left is the opportunity delta. The strongest signal wasn't found in captions: Oriane's vision found it in the frames.", href: `/discover?q=${q}`, target: "top-opportunities" },
   { title: "Desert heat", say: "Across 48,197 running videos Oriane indexed, only 119 (0.25%) show people under hot desert sun. Those videos earn 2.1× the engagement per view. Only 12 of them even mention heat: captions would miss it.", href: opp, target: "overview" },
   { title: "Real evidence", say: "Real videos from Oriane, ranked by visual match. The 3 most-watched with this look are brand ads or boosted posts: brands pay for this look, organic supply stays small.", href: opp, target: "evidence" },
-  { title: "Crowd Gap", say: "49% of style-matched running videos are first-person POV. Desert heat is 9% and earns 2× the engagement per view. Below: no big running brand owns this space, and Nike is discussed in 115 videos that never tag it.", href: opp, target: "crowd-gap" },
+  { title: "Crowd Gap", say: "49% of style-matched running videos are first-person POV. Desert heat is 9% and earns 2× the engagement per view.", href: opp, target: "crowd-gap" },
+  { title: "Hidden conversation", say: "Are brands already there? Six major running brands collect 2,068 mentions, only 33 in desert-heat videos. And Nike is discussed in 115 running videos that never tag or caption it.", href: opp, target: "hidden-conversation" },
   { title: "Creative DNA", say: "What the winners have in common, measured from transcripts and audio: talk in the first second, creator's own voice, a real challenge.", href: opp, target: "dna" },
   { title: "Test with Audience", say: "We found the opportunity with real video evidence. Now an AI-simulated audience panel acts only as a creative pre-flight check. Directional, not consumer research.", href: opp, target: "audience-lab", action: "run-audience" },
   { title: "One improvement", say: "The simulated panel converges on one fix: state the challenge in the first 2 seconds, which matches the evidence (every example talks within 1s). Apply it and re-test.", href: opp, target: "audience-lab-recs" },
   { title: "Creators who can make it", say: "Ranked by proven execution against their own median, not follower count.", href: opp, target: "creators" },
   { title: "Build the campaign", say: "A brief a creator can shoot tomorrow, built from the evidence.", href: opp, target: "activate", action: "open-brief" },
-  { title: "TikTok · Reels · Shorts", say: "One opportunity, adapted per platform. Oriane understands the video. KanDelta understands what to do about it.", href: opp, target: "activate-platforms" },
+  { title: "TikTok · Reels · Shorts", say: "One opportunity, adapted per platform. Oriane understands the video internet. KanDelta identifies the opportunity hidden inside it.", href: opp, target: "activate-platforms" },
 ];
 
 interface Ctx {

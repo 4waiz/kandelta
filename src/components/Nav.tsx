@@ -11,9 +11,10 @@ export function Logo({ className }: { className?: string }) {
     <span className={cn("inline-flex items-center gap-2", className)}>
       <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden>
         <rect x="1" y="1" width="18" height="18" rx="4" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.55" />
-        <rect x="4.5" y="4.5" width="5" height="5" rx="1" fill="var(--accent)" />
+        <path d="M10 5.2 15 14.6H5Z" fill="none" stroke="var(--accent)" strokeWidth="1.6" strokeLinejoin="round" />
       </svg>
       <span className="text-[15px] font-semibold tracking-tight">KanDelta</span>
+      <span className="hidden text-[11px] text-faint md:inline">by Team Kanban</span>
     </span>
   );
 }

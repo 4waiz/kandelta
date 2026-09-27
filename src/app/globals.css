@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* WhiteSpace design tokens — near-black canvas, neutral grays, one accent for white space. */
+/* KanDelta design tokens — near-black canvas, neutral grays, one accent for white space. */
 :root {
   --bg: #0a0a0b;
   --panel: #111113;

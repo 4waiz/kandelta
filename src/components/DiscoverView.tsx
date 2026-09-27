@@ -88,7 +88,7 @@ export function DiscoverView() {
               <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{data.query}</h1>
               <p className="mt-2 max-w-3xl text-sm text-muted">
                 Oriane measured <span className="text-fg">{fmtInt(data.baseline.n)} videos</span> ({fmtCompact(data.baseline.views)} views) and{" "}
-                {data.opportunities.length} creative angles. {data.opportunities.filter((o) => o.quadrant === "white-space").length} show the high-response, low-supply delta.
+                {data.opportunities.length} creative angles. {data.opportunities.filter((o) => o.quadrant === "white-space").length} show an opportunity delta.
               </p>
             </div>
             <div className="flex items-center gap-4">

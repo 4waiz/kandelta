@@ -114,5 +114,5 @@ export const METHOD = {
     },
   ],
   caveat:
-    "KanDelta does not predict virality. It detects observable mismatches between content supply and audience response.",
+    "KanDelta does not predict virality. It identifies observed mismatches between content supply and audience response.",
 };

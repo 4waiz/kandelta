@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ArrowRight, Search } from "lucide-react";
 import { DEMO_QUERY } from "./Presenter";
 
-const EXAMPLES = [DEMO_QUERY, "UAE beauty creators", "Specialty coffee", "Luxury travel", "Fitness content", "Dubai restaurants"];
+const EXAMPLES = [DEMO_QUERY, "UAE skincare", "Dubai restaurants", "Specialty coffee", "Luxury travel"];
 
 export function SearchBox({ size = "lg" }: { size?: "lg" | "sm" }) {
   const router = useRouter();

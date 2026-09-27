@@ -1,11 +1,17 @@
 # KanDelta
 
-**Find where attention is going before everyone else gets there.**
-Opportunity intelligence for the video internet, built on [Oriane](https://www.oriane.xyz) and [Replit](https://replit.com).
+### Opportunity intelligence for the video internet
 
-> Find the delta before the market does.
+**"Find the delta before the market does."**
 
-Opportunity intelligence for the video internet. By Team Kanban.
+KanDelta finds where audience attention and creator supply diverge, using real video intelligence from
+[Oriane](https://www.oriane.xyz), built and deployed on [Replit](https://replit.com).
+
+**The name.** KAN = Team Kanban. Delta (Δ) = the divergence between creator supply and audience response.
+
+> Oriane understands the video internet. KanDelta identifies the opportunity hidden inside it.
+
+KanDelta by Team Kanban · https://github.com/4waiz/kandelta
 
 ---
 
@@ -52,7 +58,7 @@ Oriane (vision · spoken words · metadata · comments)
 1. **Discover.** Describe a market. KanDelta measures ~28 creative angles: 22 detected in what's *said*
    (exact phrases in the transcript or caption) and 6 detected in what's *shown* (Oriane visual similarity ≥ 0.8
    against text prompts such as "a person outdoors under hot desert sun").
-2. **Delta Map.** Supply (x) vs audience response (y). Top-left = high-response, low-supply opportunity.
+2. **Delta Map.** Supply (x) vs audience response (y). Top-left = the opportunity delta.
 3. **Evidence.** Real videos, ranked by visual match, with sponsored / likely-boosted posts separated and a
    brand-safety screen on what's displayed.
 4. **Crowd Gap.** What most creators default to vs what audiences reward (visual style, sound, collabs, tagging,
@@ -166,7 +172,7 @@ Oriane x Replit: *Build for the Video Economy*, Dubai, 27 September 2026. Built 
 
 ## Limitations
 
-- KanDelta does not predict virality. It detects observable mismatches between content supply and audience response.
+- KanDelta does not predict virality. It identifies observed mismatches between content supply and audience response.
 - Angle supply depends on how an angle is detected: phrase matching misses videos that never say it, and vision
   prompts are approximations (threshold 0.8).
 - Oriane aggregates are sums, so large accounts weigh more; we trim the top 3 videos and show confidence.
@@ -176,6 +182,12 @@ Oriane x Replit: *Build for the Video Economy*, Dubai, 27 September 2026. Built 
 - Audience Lab is simulated. YouTube Shorts adaptations are not grounded in Oriane data (Oriane indexes Instagram +
   TikTok).
 - Oriane API credit costs are not publicly documented; results are cached aggressively.
+
+## Naming note
+
+The product was renamed from its working title during the hackathon. Internal module paths (`src/lib/whitespace`),
+environment variables (`WHITESPACE_*`) and cache/storage keys intentionally keep the old name so the tested build and
+the cached real Oriane responses stay valid. They will be renamed after the hackathon.
 
 ## Future work
 

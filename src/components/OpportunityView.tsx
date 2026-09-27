@@ -284,7 +284,7 @@ export function OpportunityView() {
             </div>
           ) : null}
         </div>
-        <div className="mt-4">
+        <div id="hidden-conversation" className="mt-4 scroll-mt-24">
           <BrandLandscape q={q} id={id} universe={data.market.universe} opportunityName={o.name} />
         </div>
       </section>

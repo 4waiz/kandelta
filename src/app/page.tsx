@@ -26,14 +26,15 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-3xl pt-20 sm:pt-28">
       <div className="fade-in">
-        <div className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">KanDelta · Opportunity intelligence for the video internet</div>
+        <div className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Opportunity intelligence for the video internet</div>
         <h1 className="mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-[56px]">
           Find the delta
           <br />
           <span className="text-muted">before the market does.</span>
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-          KanDelta analyzes the video internet to uncover places where audience response and creator supply diverge before the opportunity becomes crowded.
+          KanDelta analyzes the video internet to uncover places where audience response and creator supply diverge — before
+          the opportunity becomes crowded.
         </p>
       </div>
 

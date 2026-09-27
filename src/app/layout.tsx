@@ -7,9 +7,9 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "KanDelta — Find the delta before the market does",
+  title: "KanDelta — Opportunity intelligence for the video internet",
   description:
-    "Opportunity intelligence for the video internet. KanDelta finds where audience response and creator supply diverge before the opportunity becomes crowded.",
+    "Find the delta before the market does. KanDelta finds where audience attention and creator supply diverge, using Oriane's video intelligence.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
