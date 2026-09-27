@@ -1,43 +1,184 @@
 # WhiteSpace
 
-**Opportunity intelligence for the video internet.** Find where attention is going before everyone else gets there.
+**Find where attention is going before everyone else gets there.**
+Opportunity intelligence for the video internet, built on [Oriane](https://www.oriane.xyz) and [Replit](https://replit.com).
 
-WhiteSpace compares observed creator supply with observed response to find video angles worth investigating. It is **not a virality prediction** or consumer research. This repository is the Replit hackathon track on `replit-track`; do not merge it into the separately developed `main` branch as part of a demo.
+> Oriane understands the video. WhiteSpace understands what to do about it.
+
+---
+
+## Problem
+
+Brands, agencies and creators decide what to make by scrolling what's already trending. By the time a format is visible
+enough to copy, it's crowded: everyone ships the same POV, the same talking head, the same unboxing. Social analytics
+tools read captions and hashtags, so they miss most of what actually happens *inside* the video.
+
+Would someone pay for this? A brand planning a creator campaign spends thousands per video. Knowing which creative
+angle audiences reward, *before* the crowd arrives, and having the evidence, the recipe, the creators and the brief in
+one place, replaces days of manual research.
+
+## Insight
+
+When **audience response is unusually high** but **creator supply is still low**, there is a creative opportunity.
+WhiteSpace measures that mismatch with real video intelligence, not guesses.
+
+## What it found (real Oriane data, last 3 months)
+
+Search **"Running shoes UAE"** →
+
+- Oriane measured **48,197 running videos** (Instagram + TikTok).
+- **Desert heat** (runners outdoors under hot desert sun) appears in only **119 videos, 0.25% of supply**, yet earns
+  **2.1× the engagement per view** of the average running video.
+- **Found by watching, not reading:** only 12 of those 119 videos mention heat, hot weather or humidity in their caption
+  or speech. A caption or transcript search would miss ~90% of this opportunity. Oriane's vision sees it in the frames.
+- **Brands already pay for this look:** several of the most-watched examples are disclosed ads or boosted posts
+  (e.g. partner posts tagging @altrarunning, @zalando). Organic creators barely make it.
+- **No brand owns the space:** the six biggest running brands collect 2,068 mentions across running videos, but only
+  33 of those mentions are in desert-heat videos.
+- **Crowd gap:** 49% of style-matched running videos are first-person POV; desert heat is 9% of them and earns 2× the
+  engagement per view.
+
+## How it works
+
+```
+Oriane (vision · spoken words · metadata · comments)
+  → WhiteSpace measurement (supply, reach, engagement, momentum)
+  → Opportunity map → Evidence → Crowd Gap → Creative DNA
+  → Audience Lab → Creator Fit → Campaign Brief → Activate (TikTok · Reels · Shorts)
+```
+
+1. **Discover.** Describe a market. WhiteSpace measures ~28 creative angles: 22 detected in what's *said*
+   (exact phrases in the transcript or caption) and 6 detected in what's *shown* (Oriane visual similarity ≥ 0.8
+   against text prompts such as "a person outdoors under hot desert sun").
+2. **WhiteSpace Map.** Supply (x) vs audience response (y). Top-left = white space.
+3. **Evidence.** Real videos, ranked by visual match, with sponsored / likely-boosted posts separated and a
+   brand-safety screen on what's displayed.
+4. **Crowd Gap.** What most creators default to vs what audiences reward (visual style, sound, collabs, tagging,
+   language). A gap is only reported when the data shows one.
+5. **Who's already there + Hidden conversation.** Brand coverage of the gap, and what's *spoken* about brands in
+   videos that never caption or tag them (Oriane Shadow Reach concept, via transcript-include + caption-exclude +
+   mention-exclude filters).
+6. **Creative DNA.** Measured on the evidence: talk-first openings (transcript timestamps), duration, voice density,
+   original vs licensed audio, CTA patterns, real hooks (first 3 seconds, transcribed by Oriane), audience comments.
+7. **Audience Lab.** Pressure-test the brief with six simulated personas before paying for production.
+8. **Creator Fit.** Creators ranked by proven execution: the angle video's views vs **the creator's own median**
+   (fetched per creator), reach, engagement, on-topic share and freshness. Not follower count.
+9. **Activate.** A concrete brief plus TikTok / Reels / Shorts adaptations, and an **Evidence Vault** swipe file.
+
+## Why Oriane
+
+Oriane is the video intelligence layer. WhiteSpace uses it deeply:
+
+| Oriane capability | How WhiteSpace uses it |
+|---|---|
+| `totalCount` over the whole index | Content **supply** per angle (not a sample) |
+| Aggregations (Σ views, Σ interactions, Σ interactions/followers) | Exact **views per follower** and **engagement per view** per angle |
+| Visual similarity (text assets) | Angles and crowd gaps detected **in the frames** |
+| Transcripts + chunk timestamps | Phrase-matched angles, real hooks, talk-first timing, hidden brand mentions |
+| Popular comments | Audience voice |
+| Audio / co-author / mention / language metadata | Crowd gaps |
+| `profileId` search | Each creator's own median views (creator baseline) |
+
+API notes (non-secret): [`docs/ORIANE_API_NOTES.md`](docs/ORIANE_API_NOTES.md).
+
+## Why Replit
+
+WhiteSpace runs and deploys on Replit: Next.js on Node 20, `ORIANE_API_KEY` in Replit Secrets, autoscale deployment
+(`.replit`). The Oriane cache of real responses ships with the repo, so the demo stays reliable even if the API is slow.
 
 ## Architecture
 
-- `artifacts/whitespace`: responsive React/Vite app at `/`, with a URL-backed search, interactive white-space map, opportunity details, and presentation mode.
-- `artifacts/api-server`: Express server at `/api`. The browser calls this server, **never Oriane directly**. `ORIANE_API_KEY` is read only by the server and sent as a Bearer credential to Oriane.
-- `artifacts/api-server/src/lib/oriane`: documented contents-search and text-asset adapter, normalization, memory/disk caching. `artifacts/api-server/data/oriane-cache` contains previously retrieved **real** response snapshots, not invented videos. Responses are keyed by request path, parameters and body. Fresh cached data is used for 24 hours by default; if an upstream call fails, older saved responses may be returned as `stale-cache`. Set `WHITESPACE_DATA_MODE=fixture` on the server to forbid live upstream calls, using saved responses only.
-- `artifacts/api-server/src/lib/whitespace`: market parsing, deterministic analysis, evidence, creative patterns, creator candidates and suggested campaign briefs. The OpenAPI contract lives in `lib/api-spec/openapi.yaml`.
+```
+browser ──▶ Next.js UI (React 19, Tailwind 4)
+              │
+              ▼
+        /api/analyze · /api/opportunity · /api/landscape   (server routes)
+              │
+              ▼
+        lib/whitespace/*  (scoring, crowd gaps, DNA, creators, brief, audience lab)
+              │
+              ▼
+        lib/oriane/client.ts  (server-only; memory → disk cache → Oriane API; stale fallback)
+              │
+              ▼
+        connect.oriane.xyz  (Bearer ORIANE_API_KEY, never sent to the browser)
+```
 
-Run the existing `artifacts/api-server: API Server` and `artifacts/whitespace: web` managed workflows in Replit. `/api/health` returns service status, whether Oriane is configured, cache count and data mode without exposing the credential. `/api/healthz` remains the platform startup check. A missing key can still serve cached requests; an uncached request returns a clear 503 if Oriane cannot be reached. The status endpoint checks configuration, not live Oriane availability. Production requires the API and web artifact services together, with `ORIANE_API_KEY` configured as a server secret for uncached searches.
+## Opportunity model
 
-## Two-minute demo
+All inputs are Oriane population statistics. The 3 most-viewed videos are excluded from every rate (views, followers,
+interactions), so one viral hit or boosted ad cannot manufacture an opportunity.
 
-1. Select **Presentation mode**, or search **Running shoes UAE**. This exact query is pinned to the **June 27–September 27, 2026** observation window to preserve a verified real Oriane-backed demonstration as the calendar advances; the dates are visible in the scope. Other queries use the rolling three-month window unless `WHITESPACE_WINDOW_END` is explicitly set on the server.
-2. Show the scatter map: the horizontal axis is **share of observed video supply**, the vertical axis is **relative observed performance**. Select **Desert heat** (`visual-outdoor-sun`). For the verified snapshot the market baseline has 48,197 global running-content videos and this visual slice has 119 matched videos; these are Oriane aggregates, not invented figures.
-3. Read the scope caveat: just 198 locally text-matched videos also mention the UAE, so the analysis falls back to a **global** baseline. This is not a measured UAE opportunity. Walk through the calculation disclosure and open real linked TikTok/Instagram source posts.
-4. Show the measured visual-style crowd gap and the Creative DNA traits, each tied to observed posts; review creator candidates only with their available supporting evidence, then present the **recommended** cross-platform brief. Instagram and TikTok evidence comes from Oriane; the YouTube Shorts adaptation is explicitly an editorial suggestion, not a measured YouTube result.
+```
+Reach index         = (views ÷ followers)_angle ÷ (views ÷ followers)_market
+Engagement index    = (interactions ÷ views)_angle ÷ (interactions ÷ views)_market
+Response            = √(reach index × engagement index)
+Performance         = clamp(0.5 + log₂(response), 0, 1)
+Scarcity            = 1 ÷ (1 + supply share ÷ 1%)
+Confidence          = size factor (log₁₀ n ÷ log₁₀ 300) × concentration factor (top-3 share of views)
+Opportunity Score   = 100 × √(Performance × Scarcity) × Confidence
+Stage               = EARLY < 0.5% ≤ EMERGING < 1.5% ≤ CROWDED < 4% ≤ SATURATED   (current, not a forecast)
+Momentum            = angle's last-30-day share of its 3-month supply ÷ the market's
+```
 
-If the demo endpoint is unavailable, show the error rather than replacing it with fake data. The saved responses remain available in fixture mode. Data provenance (`live`, `cache`, `stale-cache`), observation window and scope caveats must stay visible.
+Every screen has **"How is this calculated?"**.
 
-## Methodology
+## Crowd Gap
 
-The market is an Oriane caption-phrase query for videos published in the specified window. Angle supply is the matching count divided by the market count. Text angles match exact phrases in caption or transcript; vision angles use frame similarity to reusable text assets at **≥0.8**. Supply groups can overlap. The map's x value is supply share; its y value is `√(reach index × engagement index)`. Reach index compares `(views / creator followers)` to the market; engagement index compares `(likes + comments + shares) / views` to the market. The three most-viewed videos are excluded from both numerator groups when enough remain. Population aggregates use Oriane's full matched set, not the three fetched sample posts.
+For each dimension WhiteSpace compares the **most common choice** (creator consensus) with the **best-responding
+choice** (audience response). A gap is reported only when the best-responding choice beats the consensus by ≥ 1.25×.
+Otherwise it says "No gap here".
 
-The deterministic ranking score is `100 × √(clamp(0.5 + log₂(relative performance), 0, 1) × (1 / (1 + supply share / 0.01))) × confidence`; confidence discounts small and top-three-concentrated groups. It is **not** an AI score. Momentum, when available, is the angle's last-30-day share of its three-month posts divided by the same share for the market. It measures posting mix, **not** future demand. The detail view should provide the numbers and formulas, not merely the rank.
+## Audience Lab (honest by design)
 
-The population crowd-gap comparison contrasts the largest measured style or metadata group with the best-responding group (only when both have at least 30 matched videos). Creative DNA is a deterministic summary of observed transcript start, length, audio, caption/transcript CTA, language, hooks and comments where those fields exist. Creator fit is a **candidate ranking**, informed by evidence and available recent creator history; missing history must not be presented as verified personal overperformance. The campaign brief is a creative recommendation, not an Oriane-generated script or a promise of results.
+**Simulated audience panel: directional feedback, not real market research.** Six rule-based personas (serious runner,
+casual student, potential buyer, content creator, heavy short-form viewer, UAE resident) react to measurable features
+of the draft (when the stakes are stated, jargon, proof beats, price context, CTA style, local and Arabic cues), weighed
+against norms Oriane measured on the evidence. Every reaction lists *why* it fired; recommendations cite their evidence.
+It never produces market statistics such as "87% would buy".
 
-## Limits and data care
+## Running locally
 
-- Oriane's documented search index covers **TikTok and Instagram**, not YouTube. Coverage, indexing and geo mentions are incomplete; a caption mentioning a city does not establish the video's actual audience location.
-- Visual similarity can return off-topic posts; a frame match does **not** establish product performance or local relevance. Inspect the source video before acting. A broad running-content universe must not be described as a shoe-only market.
-- Audience demographics, future virality, consumer purchase intent, creator endorsement and a causal effect of any format are **not measured**. No Audience Lab panel is shown without a grounded, clearly disclosed simulation.
-- Aggregate views can be dominated by large accounts, overlapping supply groups and sponsored distribution. We exclude the top three for relative response and disclose concentration; this does not eliminate sampling or selection bias.
-- The caches include third-party captions, thumbnails and public post metadata. Treat them as source snapshots, not owned assets; thumbnails may expire and links may be removed by the platforms.
+```bash
+npm install
+cp .env.example .env.local   # then set ORIANE_API_KEY
+npm run dev                  # http://localhost:3000
+```
 
-## Development checks
+- `npm run demo:fixtures` serves only saved real Oriane responses (no API calls, no credits).
+- `npm run explore -- scripts/markets/running.json` is the exploration harness used to validate the idea.
+- `npm run lint`, `npm run typecheck`, `npm run build`.
 
-From the workspace root: `pnpm run typecheck`, `pnpm --filter @workspace/whitespace run typecheck`, and `pnpm --filter @workspace/api-server run typecheck`. Use the managed workflows to verify the app and API; the web build needs its workflow-provided `BASE_PATH` and `PORT`. There are no credentials in tracked files.
+## Environment variables
+
+| Name | Purpose |
+|---|---|
+| `ORIANE_API_KEY` | Oriane API key (server-only; Replit Secret / `.env.local`) |
+| `WHITESPACE_DATA_MODE` | `fixture` = never call Oriane, serve cached real responses only |
+| `WHITESPACE_CACHE_TTL_HOURS` | Cache freshness before re-querying (default 24) |
+| `WHITESPACE_WINDOW_END` | Pin the 3-month analysis window end date (YYYY-MM-DD) for a reproducible demo |
+
+## Hackathon
+
+Oriane x Replit: *Build for the Video Economy*, Dubai, 27 September 2026. Built today.
+
+## Limitations
+
+- WhiteSpace does not predict virality. It detects observable mismatches between content supply and audience response.
+- Angle supply depends on how an angle is detected: phrase matching misses videos that never say it, and vision
+  prompts are approximations (threshold 0.8).
+- Oriane aggregates are sums, so large accounts weigh more; we trim the top 3 videos and show confidence.
+- Market definition is caption-based ("running" also catches "running late"); evidence is screened for relevance and
+  brand safety, but population numbers include some noise.
+- Location slices (e.g. UAE-only) are often too small; WhiteSpace says so and falls back to the global market.
+- Audience Lab is simulated. YouTube Shorts adaptations are not grounded in Oriane data (Oriane indexes Instagram +
+  TikTok).
+- Oriane API credit costs are not publicly documented; results are cached aggressively.
+
+## Future work
+
+- **Live Signal:** continuously monitor fresh Oriane data and alert when a new crowd gap opens (not built; we don't
+  fake live monitoring).
+- Demand-gap mining from comments at scale (recurring questions → supply check).
+- Image-asset vision prompts (logo / product shots) for visual Shadow Reach.
+- Expose WhiteSpace as a tool for AI agents (Oriane already ships MCP for AIs).

@@ -1,0 +1,1 @@
+- [Artifact runtime configuration](artifact-runtime-configuration.md) — validated artifact metadata rejects .replit deployment keys; managed commands run from the artifact directory.
