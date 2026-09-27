@@ -10,7 +10,79 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: analysis
+    description: Video market analysis
 paths:
+  /analyze:
+    get:
+      operationId: analyzeMarket
+      tags: [analysis]
+      summary: Analyze a market, brand, or audience
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Market analysis
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "400":
+          description: Missing query
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Video intelligence unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /opportunity:
+    get:
+      operationId: getOpportunity
+      tags: [analysis]
+      summary: Get an opportunity detail
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Opportunity detail
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "400":
+          description: Missing query or opportunity id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Video intelligence unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
   /healthz:
     get:
       operationId: healthCheck
@@ -26,6 +98,13 @@ paths:
                 $ref: "#/components/schemas/HealthStatus"
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
     HealthStatus:
       type: object
       properties:

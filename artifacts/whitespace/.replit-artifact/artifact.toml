@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Whitespace"
+description = "A web app for analyzing video-market opportunities and exploring creative directions, with Oriane-backed analysis endpoints."
+version = "1.0.0"
+id = "artifacts/whitespace"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18253
+
+[services.development]
+run = "pnpm --filter @workspace/whitespace run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/whitespace", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/whitespace/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18253"
+BASE_PATH = "/"

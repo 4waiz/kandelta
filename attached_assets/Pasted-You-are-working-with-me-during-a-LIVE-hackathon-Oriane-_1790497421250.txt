@@ -1,0 +1,735 @@
+You are working with me during a LIVE hackathon:
+
+Oriane x Replit — Build for the Video Economy
+Dubai
+September 27, 2026
+
+PROJECT:
+WhiteSpace
+
+GITHUB:
+https://github.com/4waiz/whitespace
+
+IMPORTANT:
+This Replit workspace is the REPLIT TRACK of the project.
+
+Another agent is simultaneously working on the main project outside Replit.
+
+DO NOT overwrite or reset existing working code.
+
+We should work on a separate git branch:
+
+replit-track
+
+If we are not already on that branch, create/switch to it.
+
+========================================================
+YOUR ROLE
+========================================================
+
+You are responsible for making WhiteSpace:
+
+1. work properly inside Replit
+2. integrate securely with Oriane
+3. be deployable through Replit
+4. be reliable for a live hackathon demo
+5. look like a polished production product
+6. demonstrate meaningful use of Oriane video intelligence
+
+Do NOT merely build a fake frontend.
+
+Use REAL Oriane data where possible.
+
+========================================================
+SECRETS
+========================================================
+
+An environment secret should already exist:
+
+ORIANE_API_KEY
+
+NEVER:
+
+- print it
+- log it
+- put it in frontend code
+- commit it
+- display it
+- expose it through browser requests
+
+The browser must NEVER call Oriane directly with the private API key.
+
+Architecture:
+
+Browser
+→ WhiteSpace backend
+→ Oriane API
+
+Use server-side routes/functions only.
+
+If another environment variable is required, tell me its NAME only.
+
+Do not ask me to paste API credentials into chat.
+
+========================================================
+DO NOT INVENT THE ORIANE API
+========================================================
+
+Very important:
+
+Do not hallucinate endpoints or response fields.
+
+First inspect:
+
+- existing repository
+- existing Oriane integration
+- docs/ORIANE_API_NOTES.md if it exists
+- current API client
+- environment variables
+- cached responses
+- data models
+
+If Oriane integration already exists, USE IT.
+
+If the API is not yet documented inside the repo, stop before inventing endpoints and tell me exactly what API documentation information is missing.
+
+========================================================
+PRODUCT
+========================================================
+
+WhiteSpace is:
+
+"Opportunity intelligence for the video internet."
+
+Core tagline:
+
+"Find where attention is going before everyone else gets there."
+
+The product finds places where:
+
+AUDIENCE RESPONSE
+and
+CREATOR SUPPLY
+
+do not match.
+
+Instead of telling users:
+
+"Here is what is trending"
+
+we want to tell them:
+
+"Here is something audiences respond strongly to that creators have not saturated yet."
+
+========================================================
+WHY ORIANE
+========================================================
+
+Oriane describes itself as:
+
+- a global knowledge graph for unstructured video
+- AI that watches video like humans do
+- infrastructure for external applications and LLMs
+
+Relevant signals may include:
+
+- vision
+- spoken words
+- text on screen
+- creator/account context
+- video metrics
+- concepts/topics
+- brands/products
+- consumer discussion
+
+Use only what the ACTUAL API exposes.
+
+WhiteSpace must visibly depend on Oriane.
+
+========================================================
+CORE FLOW
+========================================================
+
+The Replit deployment should support:
+
+SEARCH
+↓
+WHITE SPACE MAP
+↓
+OPPORTUNITY
+↓
+REAL VIDEO EVIDENCE
+↓
+CROWD GAP
+↓
+CREATIVE DNA
+↓
+AUDIENCE LAB
+↓
+CREATOR FIT
+↓
+CAMPAIGN BRIEF
+
+Do not add dozens of unrelated pages.
+
+========================================================
+1. DISCOVER
+========================================================
+
+Landing page:
+
+WhiteSpace
+
+"Stop chasing trends.
+Find the space everyone else missed."
+
+Search:
+
+"Describe a market, brand or audience..."
+
+Examples:
+
+Running shoes UAE
+Dubai restaurants
+UAE skincare
+Luxury travel
+Coffee creators
+Fitness UAE
+
+CTA:
+
+Find White Space
+
+========================================================
+2. WHITE SPACE MAP
+========================================================
+
+Build a clean interactive scatter chart.
+
+X axis:
+CONTENT SUPPLY
+
+Y axis:
+RELATIVE PERFORMANCE
+
+Regions:
+
+TOP LEFT:
+WHITE SPACE
+
+TOP RIGHT:
+SATURATED WINNERS
+
+BOTTOM RIGHT:
+CONTENT NOISE
+
+BOTTOM LEFT:
+LOW SIGNAL
+
+Each concept should be clickable.
+
+Possible concept examples should come from REAL Oriane-backed analysis, not hardcoded fake claims.
+
+========================================================
+3. OPPORTUNITY
+========================================================
+
+Example structure:
+
+Extreme Heat Running Test
+
+Stage:
+EARLY
+
+Metrics:
+
+Relative Performance
+Creator Supply
+Video Supply
+Sample Size
+Momentum if defensible
+
+Explain:
+
+WHY THIS IS AN OPPORTUNITY
+
+Every metric should have:
+
+"How calculated?"
+
+Do not hide formulas.
+
+========================================================
+SCORING
+========================================================
+
+Do not invent an "AI opportunity score."
+
+Use deterministic calculations based on available data.
+
+Prefer:
+
+Relative Performance =
+video/concept performance relative to creator baseline
+
+Creator baseline should preferably use median historical performance if enough history exists.
+
+Supply =
+number of relevant observed videos and/or creators
+
+Scarcity =
+inverse of supply
+
+Momentum =
+only if timestamps/historical comparison allow it
+
+Opportunity could combine:
+
+relative performance
+× scarcity
+× momentum
+
+BUT:
+
+Only use a formula supported by available Oriane data.
+
+Document it clearly.
+
+========================================================
+4. REAL EVIDENCE
+========================================================
+
+Very important.
+
+Every opportunity should show Oriane-derived source videos where possible.
+
+Show:
+
+thumbnail
+creator
+platform
+metrics
+summary
+reason it belongs in concept
+source URL
+
+The judge should be able to see:
+
+"This conclusion came from actual videos."
+
+========================================================
+5. CROWD GAP
+========================================================
+
+Show:
+
+WHAT MOST CREATORS ARE DOING
+
+vs
+
+WHAT HIGH-PERFORMING OUTLIERS ARE DOING
+
+Example:
+
+Crowd:
+polished product reviews
+
+Outliers:
+raw stress tests
+
+or
+
+Crowd:
+product shown immediately
+
+Outliers:
+problem-first delayed reveal
+
+Only show insights supported by real evidence.
+
+========================================================
+6. CREATIVE DNA
+========================================================
+
+Extract common characteristics of strong evidence videos.
+
+Possible fields:
+
+HOOK
+FORMAT
+OPENING
+STRUCTURE
+STYLE
+TONE
+SETTING
+DURATION
+PRODUCT REVEAL
+CTA STYLE
+
+Use Oriane-derived understanding where available.
+
+Do not fabricate precise timing if the data does not support it.
+
+========================================================
+7. AUDIENCE LAB
+========================================================
+
+Add:
+
+TEST WITH AUDIENCE
+
+This is an AI-simulated audience panel.
+
+IMPORTANT:
+Clearly label:
+
+"AI-simulated audience panel.
+Directional feedback, not real consumer research."
+
+Possible simulated personas:
+
+UAE University Student
+Casual Viewer
+Category Enthusiast
+Potential Buyer
+Creator
+Heavy Short-Form Viewer
+
+They react to:
+
+- the hook
+- concept
+- brief
+- creative DNA
+
+and return:
+
+Hook clarity
+Interest
+Confusion
+Scroll risk
+CTA clarity
+
+Then synthesize:
+
+AUDIENCE CONSENSUS
+
+and
+
+RECOMMENDED CHANGES
+
+The simulated audience should be grounded in:
+
+the real WhiteSpace opportunity
++
+Oriane evidence
++
+Creative DNA
+
+rather than generic persona hallucination.
+
+========================================================
+8. CREATOR FIT
+========================================================
+
+If Oriane exposes creator history/context:
+
+rank creators by their demonstrated ability to execute the opportunity.
+
+Do NOT simply rank by followers.
+
+Show:
+
+Creator
+Fit
+Why
+Supporting videos
+
+========================================================
+9. CAMPAIGN BRIEF
+========================================================
+
+Generate an actionable brief:
+
+Concept
+Audience
+Hook
+Opening
+Shot sequence
+Tone
+Creator profile
+CTA
+Reference videos
+
+Then add lightweight platform adaptation:
+
+TikTok
+Instagram Reels
+YouTube Shorts
+
+Only recommend differences.
+
+Do NOT waste hackathon time building a full video editor.
+
+========================================================
+10. ASK WHITESPACE
+========================================================
+
+If core features are already stable, add:
+
+ASK WHITESPACE
+
+Example questions:
+
+"What are people talking about in UAE skincare that creators aren't addressing?"
+
+"What running shoe content appears oversaturated?"
+
+"What creative gaps exist around Dubai food delivery?"
+
+Answers must:
+
+use available Oriane evidence
+show source videos
+separate evidence from AI interpretation
+
+If this feature threatens the core timeline, skip it.
+
+========================================================
+REPLIT-SPECIFIC WORK
+========================================================
+
+This is extremely important.
+
+I want the project genuinely optimized for Replit.
+
+Make sure:
+
+- dev command works
+- production build works
+- deployment works
+- secrets are configured correctly
+- no private environment values leak
+- application survives reload
+- cached data survives normal navigation where practical
+- errors are handled gracefully
+
+Create:
+
+/api/health
+
+It should report:
+
+WhiteSpace: OK
+
+Oriane:
+configured / not configured
+
+Do not expose credentials.
+
+========================================================
+CACHING
+========================================================
+
+Oriane credits are limited.
+
+Do not burn API credits every page refresh.
+
+Implement caching.
+
+Ideal:
+
+query
+→ server
+→ cache lookup
+→ Oriane if required
+→ normalized result
+→ cache
+→ frontend
+
+During demo:
+
+if live API temporarily fails
+and we have REAL previously cached Oriane results,
+serve the cached result.
+
+Clearly mark:
+
+Cached result
+
+Never silently substitute fake data.
+
+========================================================
+DEMO MODE
+========================================================
+
+Create a reliable:
+
+PRESENTATION MODE
+
+It should use one REAL strong query that we identify during development.
+
+Example flow:
+
+Search UAE running shoes
+
+→ WhiteSpace Map
+
+→ click strongest real opportunity
+
+→ evidence
+
+→ Crowd Gap
+
+→ Creative DNA
+
+→ Audience Lab
+
+→ creator fit
+
+→ campaign brief
+
+Entire demo should take around 2 minutes.
+
+Do not build fake results for presentation mode.
+
+Use cached REAL Oriane responses if necessary.
+
+========================================================
+DESIGN
+========================================================
+
+The UI must be exceptional.
+
+Think:
+
+Linear
+Vercel
+Raycast
+Stripe
+high-end intelligence platform
+
+Avoid:
+
+purple AI gradients
+giant cards
+neon cyberpunk
+random glassmorphism
+huge icons
+hackathon-style UI
+
+Use:
+
+near-black / off-white
+neutral gray
+one subtle opportunity accent
+thin borders
+compact spacing
+excellent typography
+smooth loading states
+professional charts
+
+Use Geist / Inter style typography.
+
+========================================================
+README
+========================================================
+
+Update README with:
+
+WhiteSpace
+
+"Opportunity intelligence for the video internet."
+
+Explain:
+
+Problem
+Insight
+How WhiteSpace works
+Why Oriane
+Why Replit
+Architecture
+Opportunity scoring
+Audience Lab
+Demo
+Limitations
+Future work
+
+Explicitly state:
+
+"WhiteSpace does not predict virality."
+
+It identifies observed mismatches between:
+
+content supply
+and
+audience response.
+
+========================================================
+QUALITY
+========================================================
+
+Before deployment:
+
+- lint
+- typecheck
+- production build
+- no console errors
+- no broken buttons
+- no secrets client side
+- no fake metrics
+- no Lorem Ipsum
+- no dead routes
+- responsive for laptop/demo screen
+
+========================================================
+GIT
+========================================================
+
+Work on:
+
+replit-track
+
+Commit meaningful checkpoints.
+
+Examples:
+
+feat: configure Replit runtime
+feat: secure Oriane backend integration
+feat: add WhiteSpace map
+feat: add evidence workflow
+feat: add Audience Lab
+feat: add presentation mode
+chore: configure Replit deployment
+
+Do NOT merge into main automatically.
+
+At the end tell me:
+
+- commits made
+- major files changed
+- what works
+- deployed URL
+- anything worth cherry-picking into main
+
+========================================================
+PRIORITY
+========================================================
+
+We have limited hackathon time.
+
+Priority order:
+
+1. working Oriane connection
+2. real interesting result
+3. complete core workflow
+4. Replit deployment
+5. clean UI
+6. Audience Lab
+7. optional features
+
+A simple real product beats a complex fake one.
+
+Do not just give me a plan.
+
+Inspect the repo and start executing.
