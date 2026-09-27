@@ -1,0 +1,202 @@
+IMPORTANT FINAL SYNC.
+
+Claude has finished the final KanDelta rebrand AFTER the commit you previously merged.
+
+Your current Preview is still the OLD pre-rebrand WhiteSpace version.
+
+I need you to sync the LATEST origin/claude-track and deploy THAT version.
+
+DO NOT add features.
+DO NOT redesign anything.
+DO NOT use the legacy artifacts/api-server deployment.
+
+==================================================
+1. FETCH THE NEWEST CLAUDE TRACK
+==================================================
+
+Run:
+
+git fetch origin
+
+Inspect:
+
+git log origin/claude-track -1 --oneline
+git log HEAD -1 --oneline
+
+The latest origin/claude-track now contains the KanDelta rebrand.
+
+Merge the NEW changes into the current Replit workspace.
+
+Preserve only necessary Replit runtime/deployment configuration.
+
+For all application/product files, prefer the latest origin/claude-track.
+
+==================================================
+2. FINAL BRAND MUST BE KANDELTA
+==================================================
+
+After syncing, the visible product MUST say:
+
+KanDelta
+
+NOT:
+WhiteSpace
+
+Landing page:
+
+KanDelta
+
+"Find the delta before the market does."
+
+CTA:
+
+"Find the Delta"
+
+Navigation should show:
+
+KanDelta
+by Team Kanban
+
+Presentation Mode and visible UI should use:
+
+Delta Map
+
+not WhiteSpace Map.
+
+Internal code names such as:
+src/lib/whitespace/*
+WHITESPACE_WINDOW_END
+WHITESPACE_CACHE_TTL_HOURS
+
+MUST remain unchanged if needed for compatibility.
+
+Only user-facing branding changes.
+
+==================================================
+3. DEPLOY THE ROOT NEXT.JS APPLICATION ONLY
+==================================================
+
+The last Replit deployment failed because it attempted to build/use the old legacy API service.
+
+DO NOT deploy:
+
+artifacts/api-server
+or any old migrated API service.
+
+Claude's final application is the ROOT Next.js application.
+
+The root Next.js app already contains its own:
+
+src/app/api/*
+
+server routes.
+
+Use the root application as the only deployed service.
+
+Production should run equivalent to:
+
+npm run build
+next start -H 0.0.0.0 -p $PORT
+
+Use Replit's required deployment format/configuration around that command.
+
+==================================================
+4. ENVIRONMENT
+==================================================
+
+Confirm:
+
+ORIANE_API_KEY
+is available server-side only.
+
+Configurations:
+
+WHITESPACE_WINDOW_END=2026-09-27
+WHITESPACE_CACHE_TTL_HOURS=168
+
+SESSION_SECRET may remain unused.
+
+Never expose the Oriane key.
+
+==================================================
+5. VERIFY BEFORE PUBLISHING
+==================================================
+
+Run:
+
+npm install
+npm run lint
+npm run build
+
+Run typecheck if configured.
+
+Start the production application.
+
+Then open Preview.
+
+DO NOT continue until Preview visibly shows:
+
+KanDelta
+Find the delta before the market does.
+Find the Delta
+
+If Preview still shows "WhiteSpace", you have NOT synced the latest claude-track.
+
+==================================================
+6. TEST THE EXACT DEMO
+==================================================
+
+Use ONLY the proven cached demo:
+
+Running shoes UAE
+
+Test:
+
+Landing
+→ Delta Map
+→ Desert Heat
+→ Evidence
+→ Crowd Gap
+→ Who's already there
+→ Hidden Conversation
+→ Creative DNA
+→ Audience Lab
+→ Apply recommendation
+→ Creator Fit
+→ Build Campaign
+→ TikTok / Reels / Shorts
+
+Confirm:
+
+- no console errors
+- no 500 errors
+- no direct client calls to Oriane
+- cached demo is fast
+- no broken buttons
+- no broken evidence
+- no visible "WhiteSpace" branding
+- Presentation Mode works
+
+==================================================
+7. THEN PUBLISH
+==================================================
+
+Once Preview passes:
+
+publish/republish KanDelta.
+
+Then open the PUBLIC URL in a fresh session and run the demo again.
+
+Only after the PUBLIC URL works, tell me:
+
+READY — KANDELTA LIVE
+
+and provide:
+
+1. public URL
+2. production build result
+3. deployed commit/ref
+4. confirmation Presentation Mode passed
+5. confirmation zero visible WhiteSpace references
+
+Execute this now.
